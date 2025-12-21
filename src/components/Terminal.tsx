@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const VALID_COMMANDS = ['about', 'experience', 'projects', 'writing', 'home', 'help', 'clear']
 
@@ -13,6 +13,7 @@ function Terminal() {
     { type: 'output', text: 'Welcome! Type "help" for available commands.' }
   ])
   const navigate = useNavigate()
+  const location = useLocation()
   const inputRef = useRef<HTMLDivElement>(null)
   const historyRef = useRef<HTMLDivElement>(null)
 
@@ -43,10 +44,12 @@ function Terminal() {
         return
       }
 
-      if (command === 'help') {
+      if (command === 'cd' || command === 'pwd') {
+        newHistory.push({ type: 'output', text: location.pathname })
+      } else if (command === 'help') {
         newHistory.push({
           type: 'output',
-          text: 'Available commands: about, experience, projects, writing, home, help, clear'
+          text: 'Available commands: cd, about, experience, projects, writing, home, help, clear'
         })
         newHistory.push({
           type: 'output',
