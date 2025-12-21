@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import About from './pages/About'
 import Experience from './pages/Experience'
 import Projects from './pages/Projects'
+import ProjectDetail from './pages/ProjectDetail'
 import Writing from './pages/Writing'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/experience" element={<Experience />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/:slug" element={<ProjectDetail />} />
         <Route path="/writing" element={<Writing />} />
       </Route>
     </Routes>
