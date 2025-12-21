@@ -7,26 +7,37 @@ function ProjectDetail() {
 
   if (!project) {
     return (
-      <div>
-        <h1>Project not found</h1>
-        <p>The project you're looking for doesn't exist.</p>
-        <Link to="/projects">← Back to Projects</Link>
+      <div className="page-enter empty-state">
+        <div className="empty-state-icon">🔍</div>
+        <h1 className="empty-state-title">Project not found</h1>
+        <p className="empty-state-message">
+          The project you're looking for doesn't exist.
+        </p>
+        <Link to="/projects" className="back-link" style={{ marginTop: 'var(--space-5)' }}>
+          ← Back to Projects
+        </Link>
       </div>
     )
   }
 
   return (
-    <div>
-      <Link to="/projects">← Back to Projects</Link>
-      <h1>{project.title}</h1>
-      <div style={{ marginBottom: '1rem' }}>
-        {project.tags.map((tag) => (
-          <span key={tag} style={{ marginRight: '0.5rem' }}>
-            [{tag}]
-          </span>
-        ))}
-      </div>
-      <div>
+    <div className="page-enter detail-page">
+      <Link to="/projects" className="back-link">
+        ← Back to Projects
+      </Link>
+      
+      <header className="detail-header">
+        <h1 className="detail-title">{project.title}</h1>
+        <div className="tag-list">
+          {project.tags.map((tag) => (
+            <span key={tag} className="tag">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </header>
+
+      <div className="detail-content">
         {project.content.split('\n\n').map((paragraph, i) => (
           <p key={i}>{paragraph}</p>
         ))}
@@ -36,4 +47,3 @@ function ProjectDetail() {
 }
 
 export default ProjectDetail
-

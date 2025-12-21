@@ -3,19 +3,29 @@ import { posts } from '../data/writing'
 
 function Writing() {
   return (
-    <div>
-      <h1>Writing</h1>
-      <div>
+    <div className="page-enter">
+      {/* Page Header */}
+      <section className="section">
+        <header className="section-header">
+          <h1 className="section-title">Writing</h1>
+          <p className="section-description">
+            Thoughts on software engineering, tooling, and the craft of building.
+          </p>
+        </header>
+      </section>
+
+      {/* Post Cards */}
+      <div className="card-grid">
         {posts.map((post) => (
           <Link
             key={post.slug}
             to={`/writing/${post.slug}`}
-            style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+            className="card-link"
           >
-            <article style={{ marginBottom: '1.5rem' }}>
-              <h2>{post.title}</h2>
-              <p style={{ opacity: 0.7 }}>{post.date}</p>
-              <p>{post.summary}</p>
+            <article className="card">
+              <h2 className="card-title">{post.title}</h2>
+              <p className="card-meta">{post.date}</p>
+              <p className="card-summary">{post.summary}</p>
             </article>
           </Link>
         ))}

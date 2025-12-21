@@ -3,22 +3,32 @@ import { projects } from '../data/projects'
 
 function Projects() {
   return (
-    <div>
-      <h1>Projects</h1>
-      <div>
+    <div className="page-enter">
+      {/* Page Header */}
+      <section className="section">
+        <header className="section-header">
+          <h1 className="section-title">Projects</h1>
+          <p className="section-description">
+            Selected work from personal and open-source projects.
+          </p>
+        </header>
+      </section>
+
+      {/* Project Cards */}
+      <div className="card-grid">
         {projects.map((project) => (
           <Link
             key={project.slug}
             to={`/projects/${project.slug}`}
-            style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+            className="card-link"
           >
-            <article style={{ marginBottom: '1.5rem' }}>
-              <h2>{project.title}</h2>
-              <p>{project.summary}</p>
-              <div>
+            <article className="card">
+              <h2 className="card-title">{project.title}</h2>
+              <p className="card-summary">{project.summary}</p>
+              <div className="tag-list">
                 {project.tags.map((tag) => (
-                  <span key={tag} style={{ marginRight: '0.5rem' }}>
-                    [{tag}]
+                  <span key={tag} className="tag">
+                    {tag}
                   </span>
                 ))}
               </div>

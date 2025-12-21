@@ -4,9 +4,9 @@ import Terminal from './Terminal'
 
 function Layout() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="page-shell">
       <Navbar />
-      <main style={{ flex: 1, paddingBottom: '150px' }}>
+      <main className="main-content">
         <Outlet />
       </main>
       <Terminal />
@@ -15,4 +15,3 @@ function Layout() {
 }
 
 export default Layout
-

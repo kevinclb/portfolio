@@ -2,14 +2,38 @@ import { NavLink } from 'react-router-dom'
 
 function Navbar() {
   return (
-    <nav style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
-      <NavLink to="/about">About</NavLink>
-      <NavLink to="/experience">Experience</NavLink>
-      <NavLink to="/projects">Projects</NavLink>
-      <NavLink to="/writing">Writing</NavLink>
+    <nav className="navbar">
+      <NavLink to="/about" className="navbar-brand">
+        ~/portfolio
+      </NavLink>
+      <div className="navbar-links">
+        <NavLink
+          to="/about"
+          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+        >
+          about
+        </NavLink>
+        <NavLink
+          to="/experience"
+          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+        >
+          experience
+        </NavLink>
+        <NavLink
+          to="/projects"
+          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+        >
+          projects
+        </NavLink>
+        <NavLink
+          to="/writing"
+          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+        >
+          writing
+        </NavLink>
+      </div>
     </nav>
   )
 }
 
 export default Navbar
-
