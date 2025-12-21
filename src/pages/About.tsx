@@ -5,7 +5,7 @@ function About() {
     <div className="page-enter">
       {/* Hero Header */}
       <header className="hero">
-        <h1 className="hero-name">Jane Doe</h1>
+        <h1 className="hero-name">Kevin Babou</h1>
         <p className="hero-role">Senior Software Engineer</p>
         <p className="hero-tagline">
           Building resilient distributed systems and developer tools.

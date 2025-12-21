@@ -255,7 +255,7 @@ button:focus-visible {
 .main-content {
   flex: 1;
   padding: var(--space-6);
-  padding-bottom: 180px; /* Space for terminal */
+  padding-bottom: 240px; /* Space for terminal */
   max-width: var(--max-w-wide);
   margin: 0 auto;
   width: 100%;
@@ -372,7 +372,7 @@ button:focus-visible {
 }
 
 .terminal-body {
-  height: 140px;
+  height: 200px;
   padding: var(--space-3) var(--space-4);
   overflow-y: auto;
   display: flex;
@@ -425,7 +425,8 @@ button:focus-visible {
   caret-color: var(--accent);
 }
 
-.terminal-input::placeholder {
+.terminal-input:empty::before {
+  content: attr(data-placeholder);
   color: var(--muted);
   opacity: 0.5;
 }
@@ -835,7 +836,7 @@ button:focus-visible {
 @media (max-width: 768px) {
   .main-content {
     padding: var(--space-4);
-    padding-bottom: 180px;
+    padding-bottom: 240px;
   }
 
   .navbar {
