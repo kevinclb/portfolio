@@ -10,12 +10,17 @@ interface HistoryLine {
 
 function Terminal() {
   const [history, setHistory] = useState<HistoryLine[]>([
-    { type: 'output', text: 'Welcome! Type "help" for available commands.' }
+    { type: 'output', text: 'Welcome! I\'ve designed this terminal to allow you to programmatically navigate my website.' },
+    { type: 'output', text: 'Type "help" for available commands.' }
   ])
   const navigate = useNavigate()
   const location = useLocation()
   const inputRef = useRef<HTMLDivElement>(null)
   const historyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   useEffect(() => {
     if (historyRef.current) {
