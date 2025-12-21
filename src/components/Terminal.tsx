@@ -28,6 +28,7 @@ function Terminal() {
       const command = (inputRef.current?.textContent || '').trim().toLowerCase()
 
       if (command === '') {
+        setHistory((prev) => [...prev, { type: 'command', text: '$' }])
         return
       }
 
