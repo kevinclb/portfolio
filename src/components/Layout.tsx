@@ -1,9 +1,10 @@
 import { Outlet } from 'react-router-dom'
+import Navbar from './Navbar'
 
 function Layout() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <nav>Navbar</nav>
+      <Navbar />
       <main style={{ flex: 1, paddingBottom: '150px' }}>
         <Outlet />
       </main>
