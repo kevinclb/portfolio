@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const VALID_COMMANDS = ['about', 'experience', 'projects', 'writing', 'home', 'help', 'clear']
@@ -9,12 +9,11 @@ interface HistoryLine {
 }
 
 function Terminal() {
-  const [input, setInput] = useState('')
   const [history, setHistory] = useState<HistoryLine[]>([
     { type: 'output', text: 'Welcome! Type "help" for available commands.' }
   ])
   const navigate = useNavigate()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLDivElement>(null)
   const historyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -23,9 +22,10 @@ function Terminal() {
     }
   }, [history])
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
-      const command = input.trim().toLowerCase()
+      e.preventDefault()
+      const command = (inputRef.current?.textContent || '').trim().toLowerCase()
 
       if (command === '') {
         return
@@ -38,7 +38,7 @@ function Terminal() {
 
       if (command === 'clear') {
         setHistory([])
-        setInput('')
+        if (inputRef.current) inputRef.current.textContent = ''
         return
       }
 
@@ -68,7 +68,7 @@ function Terminal() {
       }
 
       setHistory(newHistory)
-      setInput('')
+      if (inputRef.current) inputRef.current.textContent = ''
     }
   }
 
@@ -92,16 +92,15 @@ function Terminal() {
         </div>
         <div className="terminal-input-row">
           <span className="terminal-prompt">$</span>
-          <input
+          <div
             ref={inputRef}
-            type="text"
             className="terminal-input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            contentEditable
+            role="textbox"
+            aria-label="Terminal command input"
             onKeyDown={handleKeyDown}
-            placeholder="type a command..."
-            autoComplete="off"
             spellCheck={false}
+            data-placeholder="type a command..."
           />
         </div>
       </div>
