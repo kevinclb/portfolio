@@ -1,4 +1,32 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+const VALID_COMMANDS = ['about', 'experience', 'projects', 'writing']
+
 function Terminal() {
+  const [input, setInput] = useState('')
+  const [history, setHistory] = useState<string[]>([])
+  const navigate = useNavigate()
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const command = input.trim().toLowerCase()
+      
+      if (command === '') {
+        return
+      }
+
+      if (VALID_COMMANDS.includes(command)) {
+        setHistory((prev) => [...prev, `> ${command}`, `Navigating to /${command}...`])
+        navigate(`/${command}`)
+      } else {
+        setHistory((prev) => [...prev, `> ${command}`, `Command not found: ${command}`])
+      }
+
+      setInput('')
+    }
+  }
+
   return (
     <div
       style={{
@@ -16,12 +44,17 @@ function Terminal() {
       }}
     >
       <div style={{ flex: 1, overflowY: 'auto' }}>
-        {/* Output/history area */}
+        {history.slice(-6).map((line, i) => (
+          <div key={i}>{line}</div>
+        ))}
       </div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span>&gt;&nbsp;</span>
         <input
           type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           style={{
             flex: 1,
             backgroundColor: 'transparent',
@@ -38,4 +71,3 @@ function Terminal() {
 }
 
 export default Terminal
-
