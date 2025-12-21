@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const VALID_COMMANDS = ['about', 'experience', 'projects', 'writing']
+const VALID_COMMANDS = ['about', 'experience', 'projects', 'writing', 'home']
 
 function Terminal() {
   const [input, setInput] = useState('')
@@ -16,7 +16,14 @@ function Terminal() {
         return
       }
 
-      if (VALID_COMMANDS.includes(command)) {
+      if (command.startsWith('projects/') || command.startsWith('writing/')) {
+        // Handle direct path navigation (e.g., "projects/distributed-cache")
+        setHistory((prev) => [...prev, `> ${command}`, `Navigating to /${command}...`])
+        navigate(`/${command}`)
+      } else if (command === 'home') {
+        setHistory((prev) => [...prev, `> ${command}`, `Navigating to /about...`])
+        navigate('/about')
+      } else if (VALID_COMMANDS.includes(command)) {
         setHistory((prev) => [...prev, `> ${command}`, `Navigating to /${command}...`])
         navigate(`/${command}`)
       } else {
