@@ -58,18 +58,24 @@ function About() {
         <ul>
           <li>
             <span className="text-muted">Email:</span>{' '}
-            <a href="mailto:hello@example.com">hello@example.com</a>
+            <a href="mailto:hello@example.com">kevincbabou@gmail.com</a>
           </li>
           <li>
             <span className="text-muted">GitHub:</span>{' '}
-            <a href="https://github.com/username" target="_blank" rel="noopener noreferrer">
-              github.com/username
+            <a href="https://github.com/kevinclb" target="_blank" rel="noopener noreferrer">
+              github.com/kevinclb
+            </a>
+          </li>
+          <li>
+            <span className="text-muted">Other Github:</span>{' '}
+            <a href="https://github.com/kevinbabou" target="_blank" rel="noopener noreferrer">
+              github.com/kevinbabou (work so commits are private)
             </a>
           </li>
           <li>
             <span className="text-muted">LinkedIn:</span>{' '}
-            <a href="https://linkedin.com/in/username" target="_blank" rel="noopener noreferrer">
-              linkedin.com/in/username
+            <a href="https://linkedin.com/in/kevin-babou" target="_blank" rel="noopener noreferrer">
+              linkedin.com/in/kevin-babouc
             </a>
           </li>
         </ul>
