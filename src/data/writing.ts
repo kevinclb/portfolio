@@ -10,7 +10,7 @@ export const posts: Post[] = [
   {
     slug: 'on-simplicity',
     title: 'On Simplicity in Software Design',
-    date: '2024-12-15',
+    date: '2025-10-11',
     summary: 'Why the best code is often the code you don\'t write. Thoughts on minimalism and intentional design in software engineering.',
     content: `The hardest part of building software isn't adding features — it's knowing what to leave out. Every line of code is a liability: something to maintain, debug, and explain. The best systems aren't the ones with the most capabilities. They're the ones where every piece earns its place.
 
@@ -23,7 +23,7 @@ If you want to write better software, start by asking what you can remove. The b
   {
     slug: 'terminal-workflows',
     title: 'Building Better Terminal Workflows',
-    date: '2024-11-28',
+    date: '2025-09-10',
     summary: 'A deep dive into customizing your terminal environment for maximum productivity. From shell aliases to custom scripts.',
     content: `Your terminal is the closest thing to a superpower that software gives you. But most of us leave it stock — default prompts, no aliases, scattered dotfiles we copy-paste from Stack Overflow and never revisit.
 

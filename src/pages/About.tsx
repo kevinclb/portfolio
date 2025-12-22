@@ -30,10 +30,10 @@ function About() {
           <h2 className="section-title">Technical Interests</h2>
         </header>
         <ul>
-          <li>Distributed systems and cloud architecture</li>
-          <li>Programming language design and compilers</li>
-          <li>Open source development and community building</li>
-          <li>Developer tooling and productivity</li>
+          <li>Designing APIs, services, and data pipelines that scale</li>
+          <li>Distributed systems — consensus, replication, and making things fail gracefully</li>
+          <li>LLMs and AI infrastructure, including interacting with them and building tools around them</li>
+          <li>Performance and scalability — profiling, caching, and shaving milliseconds</li>
         </ul>
       </section>
 

@@ -10,6 +10,8 @@
 - Workflow consisted of: Go, AWS EC2, Blockchain RPC calls, distributed microservice API calls, temporal workflows.
 - Cloud Developer Platform (Coinbase)
 - Built a Go microservice; led a front-end migration from a monolith to it; designed the system around it; implemented a distributed transaction locking system that uses Redis.
+- Transaction Intelligence Platform (Chime)
+- Building a normalization/aggregation pipeline for the millions of transaction events that happen at Chime every day. Working with Ruby/Rails, DynamoDB, Twirp APIs, and Protobuf schemas, across a few microservices.
 - Based in California
 - Interested in systems, product, and writing
 
