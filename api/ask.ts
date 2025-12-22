@@ -21,7 +21,7 @@ export default async function handler(
     return res.status(400).json({ error: 'Missing question' })
   }
 
-  const filePath = path.join(process.cwd(), 'data', 'kevin.md')
+  const filePath = path.join(process.cwd(), 'src', 'data', 'kevin.md')
   const context = fs.readFileSync(filePath, 'utf-8')
 
   // Set headers for SSE streaming
