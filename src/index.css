@@ -466,6 +466,11 @@ button:focus-visible {
   color: var(--text);
 }
 
+.terminal-line.prompt {
+  color: var(--accent);
+  font-style: italic;
+}
+
 .terminal-hint-label {
   color: var(--accent-2);
 }

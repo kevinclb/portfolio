@@ -10,8 +10,16 @@ const TERMINAL_HEADER_HEIGHT_PX = 40
 const DOUBLE_TAP_WINDOW_MS = 300
 
 interface HistoryLine {
-  type: 'command' | 'output' | 'error' | 'hint'
+  type: 'command' | 'output' | 'error' | 'hint' | 'prompt'
   text: string
+}
+
+type EmailFormStep = 'idle' | 'name' | 'email' | 'message' | 'sending'
+
+interface EmailFormData {
+  name: string
+  email: string
+  message: string
 }
 
 function Terminal() {
@@ -25,6 +33,8 @@ function Terminal() {
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamingText, setStreamingText] = useState('')
   const [commandHistory, setCommandHistory] = useState<string[]>([])
+  const [emailFormStep, setEmailFormStep] = useState<EmailFormStep>('idle')
+  const [emailFormData, setEmailFormData] = useState<EmailFormData>({ name: '', email: '', message: '' })
   const [historyIndex, setHistoryIndex] = useState(-1)
   const savedInputRef = useRef<string>('')
   const [bodyHeightPx, setBodyHeightPx] = useState<number>(() => {
@@ -126,10 +136,78 @@ function Terminal() {
     if (e.key === 'Enter') {
       e.preventDefault()
       
-      // Prevent new commands while streaming
-      if (isStreaming) return
+      // Prevent new commands while streaming or sending email
+      if (isStreaming || emailFormStep === 'sending') return
       
-      const command = (inputRef.current?.textContent || '').trim().toLowerCase()
+      const rawInput = (inputRef.current?.textContent || '').trim()
+      const command = rawInput.toLowerCase()
+
+      // Handle email form flow
+      if (emailFormStep !== 'idle') {
+        // Allow cancel at any step
+        if (command === 'cancel') {
+          setHistory((prev) => ([
+            ...prev,
+            { type: 'command' as const, text: `$ ${rawInput}` },
+            { type: 'output' as const, text: 'Email cancelled.' }
+          ] as HistoryLine[]).slice(-MAX_HISTORY_LINES))
+          resetEmailForm()
+          if (inputRef.current) inputRef.current.textContent = ''
+          return
+        }
+
+        if (emailFormStep === 'name') {
+          if (!rawInput) {
+            setHistory((prev) => [...prev, { type: 'error' as const, text: 'Please enter your name.' }])
+            return
+          }
+          setEmailFormData((prev) => ({ ...prev, name: rawInput }))
+          setHistory((prev) => ([
+            ...prev,
+            { type: 'command' as const, text: `$ ${rawInput}` },
+            { type: 'prompt' as const, text: `Thanks ${rawInput}! What's your email? (so Kevin can reply)` }
+          ] as HistoryLine[]).slice(-MAX_HISTORY_LINES))
+          setEmailFormStep('email')
+          if (inputRef.current) inputRef.current.textContent = ''
+          return
+        }
+
+        if (emailFormStep === 'email') {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+          if (!emailRegex.test(rawInput)) {
+            setHistory((prev) => [...prev, { type: 'error' as const, text: 'Please enter a valid email address.' }])
+            if (inputRef.current) inputRef.current.textContent = ''
+            return
+          }
+          setEmailFormData((prev) => ({ ...prev, email: rawInput }))
+          setHistory((prev) => ([
+            ...prev,
+            { type: 'command' as const, text: `$ ${rawInput}` },
+            { type: 'prompt' as const, text: 'What would you like to say to Kevin?' }
+          ] as HistoryLine[]).slice(-MAX_HISTORY_LINES))
+          setEmailFormStep('message')
+          if (inputRef.current) inputRef.current.textContent = ''
+          return
+        }
+
+        if (emailFormStep === 'message') {
+          if (!rawInput) {
+            setHistory((prev) => [...prev, { type: 'error' as const, text: 'Please enter a message.' }])
+            return
+          }
+          setEmailFormData((prev) => ({ ...prev, message: rawInput }))
+          setHistory((prev) => ([
+            ...prev,
+            { type: 'command' as const, text: `$ ${rawInput}` }
+          ] as HistoryLine[]).slice(-MAX_HISTORY_LINES))
+          if (inputRef.current) inputRef.current.textContent = ''
+          // Use timeout to ensure state is updated before submitting
+          setTimeout(() => {
+            handleEmailSubmit()
+          }, 0)
+          return
+        }
+      }
 
       if (command === '') {
         setHistory((prev) => [...prev, { type: 'command', text: '$' }])
@@ -167,6 +245,7 @@ function Terminal() {
           'projects': 'projects — Navigate to the Projects page',
           'writing': 'writing — Navigate to the Writing page',
           'question': 'question <text> — Ask the LLM a question about Kevin. Example: question what projects has kevin worked on?',
+          'email': 'email — Send a message to Kevin. Starts an interactive flow asking for your name, email, and message. Type "cancel" at any step to abort.',
           'help': 'help — Show all available commands',
           'clear': 'clear — Clear the terminal history',
           'home': 'home — Navigate to the home page (About)',
@@ -203,7 +282,7 @@ function Terminal() {
       } else if (command === 'help') {
         newHistory.push({
           type: 'hint',
-          text: 'Available commands: ls, cd, whoami, repo, about, experience, projects, writing, question, help, clear'
+          text: 'Available commands: ls, cd, whoami, repo, about, experience, projects, writing, question, email, help, clear'
         })
         newHistory.push({
           type: 'hint',
@@ -212,6 +291,10 @@ function Terminal() {
         newHistory.push({
           type: 'hint',
           text: 'Ask a question: question <your question about Kevin>'
+        })
+        newHistory.push({
+          type: 'hint',
+          text: 'Send a message: email (starts interactive flow)'
         })
         newHistory.push({
           type: 'hint',
@@ -246,6 +329,12 @@ function Terminal() {
           type: 'error',
           text: 'Please provide a question. Usage: question <your question>'
         })
+      } else if (command === 'email') {
+        newHistory.push({ type: 'prompt', text: 'What\'s your name?' })
+        setHistory(newHistory.slice(-MAX_HISTORY_LINES))
+        setEmailFormStep('name')
+        if (inputRef.current) inputRef.current.textContent = ''
+        return
       } else if (VALID_COMMANDS.includes(command)) {
         newHistory.push({ type: 'output', text: `→ Navigating to /${command}` })
         navigate(`/${command}`)
@@ -340,6 +429,63 @@ function Terminal() {
     } finally {
       setIsStreaming(false)
       setStreamingText('')
+    }
+  }
+
+  const resetEmailForm = () => {
+    setEmailFormStep('idle')
+    setEmailFormData({ name: '', email: '', message: '' })
+  }
+
+  const handleEmailSubmit = async () => {
+    setEmailFormStep('sending')
+    setHistory((prev) => [...prev, { type: 'output', text: 'Sending your message...' }])
+
+    try {
+      const response = await fetch('/api/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: emailFormData.name,
+          senderEmail: emailFormData.email,
+          message: emailFormData.message,
+        }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to send email')
+      }
+
+      setHistory((prev) => {
+        const newHistory = [...prev]
+        for (let i = newHistory.length - 1; i >= 0; i--) {
+          if (newHistory[i].text === 'Sending your message...') {
+            newHistory[i] = { 
+              type: 'output', 
+              text: `Message sent! Kevin will get back to you at ${emailFormData.email}` 
+            }
+            break
+          }
+        }
+        return newHistory.slice(-MAX_HISTORY_LINES)
+      })
+    } catch (error) {
+      setHistory((prev) => {
+        const newHistory = [...prev]
+        for (let i = newHistory.length - 1; i >= 0; i--) {
+          if (newHistory[i].text === 'Sending your message...') {
+            newHistory[i] = { 
+              type: 'error', 
+              text: `Error: ${error instanceof Error ? error.message : 'Failed to send email'}` 
+            }
+            break
+          }
+        }
+        return newHistory.slice(-MAX_HISTORY_LINES)
+      })
+    } finally {
+      resetEmailForm()
     }
   }
 
