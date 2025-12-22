@@ -71,12 +71,12 @@ Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
     slug: 'cli-task-manager',
     title: 'CLI Task Manager',
     summary: 'A terminal-based task management tool with vim-style keybindings. Syncs with cloud storage for cross-device access.',
-    tags: ['Rust', 'CLI', 'Productivity'],
-    content: `Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-
-Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-
-Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.`,
+    tags: ['Go', 'CLI', 'Productivity'],
+    content: `A command-line task manager written in Go for developers who live in their terminal. Features intuitive commands for adding, listing, and completing tasks, with fast fuzzy search and keyboard shortcuts inspired by vim. 
+    
+Tasks can be organized with tags and deadlines, and all data syncs securely to a cloud backend for seamless cross-device access. 
+    
+Designed to be lightweight, scriptable, and productive for power users.`,
   }
 ]
 

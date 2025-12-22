@@ -6,7 +6,7 @@ function About() {
       {/* Hero Header */}
       <header className="hero">
         <h1 className="hero-name">Kevin Babou</h1>
-        <p className="hero-role">Senior Software Engineer</p>
+        <p className="hero-role">Software Engineer</p>
         <p className="hero-tagline">
           Building resilient distributed systems and developer tools.
           Focused on latency, reliability, and developer experience.
@@ -43,10 +43,10 @@ function About() {
           <h2 className="section-title">Beyond Code</h2>
         </header>
         <ul>
-          <li>Reading science fiction and fantasy novels</li>
-          <li>Hiking and outdoor photography</li>
+          <li>Lifting weights and playing staying active through sports</li>
+          <li>Staying up to date on current events</li>
           <li>Playing chess and strategy board games</li>
-          <li>Learning to play the piano</li>
+          <li>Learning to play the guitar in my free time</li>
         </ul>
       </section>
 
