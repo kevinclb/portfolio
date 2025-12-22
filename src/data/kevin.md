@@ -50,3 +50,10 @@
 - Deployed on Vercel with a custom domain via Cloudflare DNS
 - Cursor rules file (.cursor/rules/RULE.md) enforces design system constraints
 - Future plans: tab autocomplete, command history with arrow keys, fake SRE dashboards
+
+
+## Personal
+- I have a beautiful wife, Ana. We met in Long Beach. We've been married for almost a year.
+- We love to eat wings, ice cream, and watch shows together. Our favorite shows right now are
+- Pluribus, Severance, and Love is Blind.
+- We have a dog, Chance, and a son, Bryson.
