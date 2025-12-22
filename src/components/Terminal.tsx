@@ -1,5 +1,9 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { services, formatServiceTable } from '../data/ops-services'
+import { traces, formatTraceList, formatTraceDetail } from '../data/ops-traces'
+import { formatRunbook } from '../data/ops-runbook'
+import { formatPostmortem } from '../data/ops-postmortem'
 
 const VALID_COMMANDS = ['about', 'experience', 'projects', 'writing', 'home', 'help', 'clear']
 const DEFAULT_BODY_HEIGHT_PX = 200
@@ -243,6 +247,11 @@ function Terminal() {
           'writing': 'writing — Navigate to the Writing page',
           'question': 'question <text> — Ask the LLM a question about Kevin. Example: question what projects has kevin worked on?',
           'email': 'email — Send a message to Kevin. Starts an interactive flow asking for your name, email, and message. Type "cancel" at any step to abort.',
+          'services': 'services — Display backend services with SLOs and current metrics (latency, error rate, throughput)',
+          'traces': 'traces — List available distributed traces. Use "trace <id>" to view span waterfall.',
+          'trace': 'trace <id> — Display span waterfall for a specific trace. Example: trace abc123def456',
+          'runbook': 'runbook — Display the Payment Gateway High Latency incident runbook',
+          'postmortem': 'postmortem — Display the Fraud Detection Service Outage postmortem with timeline and action items',
           'help': 'help — Show all available commands',
           'clear': 'clear — Clear the terminal history',
           'home': 'home — Navigate to the home page (About)',
@@ -279,19 +288,19 @@ function Terminal() {
       } else if (command === 'help') {
         newHistory.push({
           type: 'hint',
-          text: 'Available commands: ls, cd, whoami, repo, about, experience, projects, writing, question, email, help, clear'
+          text: 'Navigation: ls, cd, about, experience, projects, writing, home'
         })
         newHistory.push({
           type: 'hint',
-          text: 'Navigate: cd <route> (e.g., cd projects, cd writing/on-simplicity)'
+          text: 'Info: whoami, repo, question <text>, email'
         })
         newHistory.push({
           type: 'hint',
-          text: 'Ask a question: question <your question about Kevin>'
+          text: 'Ops: services, traces, trace <id>, runbook, postmortem'
         })
         newHistory.push({
           type: 'hint',
-          text: 'Send a message: email (starts interactive flow)'
+          text: 'Utility: help, clear'
         })
         newHistory.push({
           type: 'hint',
@@ -332,6 +341,40 @@ function Terminal() {
         setEmailFormStep('name')
         if (inputRef.current) inputRef.current.textContent = ''
         return
+      } else if (command === 'services') {
+        for (const service of services) {
+          const lines = formatServiceTable(service)
+          for (const line of lines) {
+            newHistory.push({ type: 'output', text: line })
+          }
+          newHistory.push({ type: 'output', text: '' })
+        }
+      } else if (command === 'traces') {
+        const lines = formatTraceList()
+        for (const line of lines) {
+          newHistory.push({ type: 'output', text: line })
+        }
+      } else if (command.startsWith('trace ')) {
+        const traceId = command.slice(6).trim()
+        const trace = traces.find(t => t.traceId === traceId)
+        if (trace) {
+          const lines = formatTraceDetail(trace)
+          for (const line of lines) {
+            newHistory.push({ type: 'output', text: line })
+          }
+        } else {
+          newHistory.push({ type: 'error', text: `Trace not found: ${traceId}. Use "traces" to list available traces.` })
+        }
+      } else if (command === 'runbook') {
+        const lines = formatRunbook()
+        for (const line of lines) {
+          newHistory.push({ type: 'output', text: line })
+        }
+      } else if (command === 'postmortem') {
+        const lines = formatPostmortem()
+        for (const line of lines) {
+          newHistory.push({ type: 'output', text: line })
+        }
       } else if (VALID_COMMANDS.includes(command)) {
         newHistory.push({ type: 'output', text: `→ Navigating to /${command}` })
         navigate(`/${command}`)
