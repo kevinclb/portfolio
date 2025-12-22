@@ -195,16 +195,13 @@ function Terminal() {
             setHistory((prev) => [...prev, { type: 'error' as const, text: 'Please enter a message.' }])
             return
           }
-          setEmailFormData((prev) => ({ ...prev, message: rawInput }))
+          const completeFormData = { ...emailFormData, message: rawInput }
           setHistory((prev) => ([
             ...prev,
             { type: 'command' as const, text: `$ ${rawInput}` }
           ] as HistoryLine[]).slice(-MAX_HISTORY_LINES))
           if (inputRef.current) inputRef.current.textContent = ''
-          // Use timeout to ensure state is updated before submitting
-          setTimeout(() => {
-            handleEmailSubmit()
-          }, 0)
+          handleEmailSubmit(completeFormData)
           return
         }
       }
@@ -437,7 +434,7 @@ function Terminal() {
     setEmailFormData({ name: '', email: '', message: '' })
   }
 
-  const handleEmailSubmit = async () => {
+  const handleEmailSubmit = async (formData: EmailFormData) => {
     setEmailFormStep('sending')
     setHistory((prev) => [...prev, { type: 'output', text: 'Sending your message...' }])
 
@@ -446,9 +443,9 @@ function Terminal() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: emailFormData.name,
-          senderEmail: emailFormData.email,
-          message: emailFormData.message,
+          name: formData.name,
+          senderEmail: formData.email,
+          message: formData.message,
         }),
       })
 
@@ -463,7 +460,7 @@ function Terminal() {
           if (newHistory[i].text === 'Sending your message...') {
             newHistory[i] = { 
               type: 'output', 
-              text: `Message sent! Kevin will get back to you at ${emailFormData.email}` 
+              text: `Message sent! Kevin will get back to you at ${formData.email}` 
             }
             break
           }
