@@ -25,6 +25,9 @@ function Terminal() {
   const [isStreaming, setIsStreaming] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [streamingText, setStreamingText] = useState('')
+  const [commandHistory, setCommandHistory] = useState<string[]>([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const savedInputRef = useRef<string>('')
   const [bodyHeightPx, setBodyHeightPx] = useState<number>(() => {
     const raw = localStorage.getItem('terminal.bodyHeightPx')
     const parsed = raw ? Number(raw) : NaN
@@ -65,6 +68,48 @@ function Terminal() {
   }, [bodyHeightPx, reservedHeightPx])
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Arrow key history navigation
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (commandHistory.length === 0) return
+      
+      if (historyIndex === -1) {
+        // Save current input before navigating
+        savedInputRef.current = inputRef.current?.textContent || ''
+      }
+      
+      const newIndex = historyIndex === -1 
+        ? commandHistory.length - 1 
+        : Math.max(0, historyIndex - 1)
+      
+      setHistoryIndex(newIndex)
+      if (inputRef.current) {
+        inputRef.current.textContent = commandHistory[newIndex]
+      }
+      return
+    }
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      if (historyIndex === -1) return
+      
+      const newIndex = historyIndex + 1
+      
+      if (newIndex >= commandHistory.length) {
+        // Restore saved input
+        setHistoryIndex(-1)
+        if (inputRef.current) {
+          inputRef.current.textContent = savedInputRef.current
+        }
+      } else {
+        setHistoryIndex(newIndex)
+        if (inputRef.current) {
+          inputRef.current.textContent = commandHistory[newIndex]
+        }
+      }
+      return
+    }
+
     if (e.key === 'Enter') {
       e.preventDefault()
       
@@ -77,6 +122,11 @@ function Terminal() {
         setHistory((prev) => [...prev, { type: 'command', text: '$' }])
         return
       }
+
+      // Add to command history and reset navigation
+      setCommandHistory((prev) => [...prev, command])
+      setHistoryIndex(-1)
+      savedInputRef.current = ''
 
       const newHistory: HistoryLine[] = [
         ...history,
@@ -112,6 +162,10 @@ function Terminal() {
         newHistory.push({
           type: 'hint',
           text: 'Ask a question: question <your question about Kevin>'
+        })
+        newHistory.push({
+          type: 'hint',
+          text: 'Tip: Use ↑/↓ arrow keys to navigate command history'
         })
       } else if (command.startsWith('projects/') || command.startsWith('writing/')) {
         newHistory.push({ type: 'output', text: `→ Navigating to /${command}` })
