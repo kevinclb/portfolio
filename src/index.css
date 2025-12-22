@@ -8,39 +8,40 @@
    - Motion for state changes only
 ============================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
   /* -------------------------------------------------------------------------
      COLORS (dark-first, neon accent)
   ------------------------------------------------------------------------- */
   /* Neutrals */
-  --bg: #0a0a0f;
-  --surface-1: #12121a;
-  --surface-2: #1a1a24;
-  --border: #2a2a3a;
-  --text: #e8e8ed;
-  --muted: #6b6b7a;
+  /* Deeper blacks, Cursor/Stripe-like dark neutrals */
+  --bg: #05060a;
+  --surface-1: #0b0d12;
+  --surface-2: #10131a;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.62);
 
-  /* Accent - Primary neon green (electric lime/matrix green) */
-  --accent: #39ff14;
-  --accent-dim: rgba(57, 255, 20, 0.12);
-  --accent-glow: rgba(57, 255, 20, 0.4);
+  /* Accent - Muted neon green (more “terminal”, less “laser”) */
+  --accent: #4ade80;
+  --accent-dim: rgba(74, 222, 128, 0.14);
+  --accent-glow: rgba(74, 222, 128, 0.35);
 
   /* Accent-2 - Secondary (use sparingly: hover/focus/special only) */
-  --accent-2: #00e5ff;
-  --accent-2-dim: rgba(0, 229, 255, 0.15);
+  --accent-2: #60a5fa;
+  --accent-2-dim: rgba(96, 165, 250, 0.16);
 
   /* Semantics */
-  --success: #00e676;
-  --warning: #ffab00;
-  --danger: #ff5252;
-  --info: #40c4ff;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --info: #60a5fa;
 
   /* -------------------------------------------------------------------------
      TYPOGRAPHY (2-font system)
   ------------------------------------------------------------------------- */
-  --font-sans: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
 
   /* Type scale (5 sizes) */
@@ -135,6 +136,9 @@ body {
   line-height: var(--leading-normal);
   color: var(--text);
   background-color: var(--bg);
+  background-image:
+    radial-gradient(1200px 700px at 20% -10%, rgba(74, 222, 128, 0.08), transparent 60%),
+    radial-gradient(900px 600px at 90% 0%, rgba(96, 165, 250, 0.06), transparent 55%);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -255,7 +259,7 @@ button:focus-visible {
 .main-content {
   flex: 1;
   padding: var(--space-6);
-  padding-bottom: 240px; /* Space for terminal */
+  padding-bottom: var(--terminal-reserved-height, 240px); /* Space for terminal */
   max-width: var(--max-w-wide);
   margin: 0 auto;
   width: 100%;
@@ -271,7 +275,9 @@ button:focus-visible {
   justify-content: space-between;
   padding: var(--space-4) var(--space-6);
   border-bottom: 1px solid var(--border);
-  background-color: var(--surface-1);
+  background-color: rgba(11, 13, 18, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -339,7 +345,7 @@ button:focus-visible {
   border-top: 1px solid var(--border);
   font-family: var(--font-mono);
   z-index: 200;
-  transition: height var(--dur-normal) var(--ease-standard);
+  transition: box-shadow var(--dur-normal) var(--ease-standard);
 }
 
 .terminal-header {
@@ -350,6 +356,13 @@ button:focus-visible {
   background-color: var(--surface-2);
   border-bottom: 1px solid var(--border);
   cursor: pointer;
+  user-select: none;
+  cursor: ns-resize;
+}
+
+.terminal-header:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .terminal-title {
@@ -372,11 +385,17 @@ button:focus-visible {
 }
 
 .terminal-body {
-  height: 200px;
+  height: var(--terminal-body-height, 200px);
   padding: var(--space-3) var(--space-4);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+}
+
+.terminal--collapsed .terminal-body {
+  height: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .terminal-history {
