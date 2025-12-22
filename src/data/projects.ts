@@ -72,10 +72,10 @@ Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
     title: 'CLI Task Manager',
     summary: 'A terminal-based task management tool with vim-style keybindings. Syncs with cloud storage for cross-device access.',
     tags: ['Go', 'CLI', 'Productivity'],
-    content: `A command-line task manager written in Go for developers who live in their terminal. Features intuitive commands for adding, listing, and completing tasks, with fast fuzzy search and keyboard shortcuts inspired by vim. 
-    
-Tasks can be organized with tags and deadlines, and all data syncs securely to a cloud backend for seamless cross-device access. 
-    
+    content: `A command-line task manager written in Go for developers who live in their terminal. Features intuitive commands for adding, listing, and completing tasks, with fast fuzzy search and keyboard shortcuts inspired by vim.
+
+Tasks can be organized with tags and deadlines, and all data syncs securely to a cloud backend for seamless cross-device access.
+
 Designed to be lightweight, scriptable, and productive for power users.`,
   }
 ]
