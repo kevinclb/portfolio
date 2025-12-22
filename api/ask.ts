@@ -31,7 +31,7 @@ export default async function handler(
 
   try {
     const stream = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-5',
       stream: true,
       messages: [
         {
