@@ -32,13 +32,17 @@ Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit la
   {
     slug: 'learning-in-public',
     title: 'The Case for Learning in Public',
-    date: '2024-10-10',
+    date: '2025-08-05',
     summary: 'How sharing your learning journey can accelerate growth and build meaningful connections in the developer community.',
-    content: `Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.
+    content: `Most of us are taught to hide our learning until it looks polished. To wait until we "know enough." To ship only finished thoughts. But that mindset quietly slows us down.
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+Learning in public flips that model. It treats confusion as signal, curiosity as momentum, and progress as something worth sharing before it's perfect. Writing notes, asking half-formed questions, and documenting what you don't yet understand isn't a liability — it's a compounding advantage.
 
-Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.`,
+When you learn in public, you build feedback loops instead of silos. You attract people who are one step ahead of you — and help those one step behind. You turn studying into leverage, and practice into proof of work. Over time, your thinking sharpens faster because it's exposed to reality, not just your own head.
+
+This isn't about personal branding or chasing an audience. It's about building a habit of honest thinking, visible iteration, and long-term skill accumulation. The internet just happens to be the best notebook we've ever had.
+
+Learning in public doesn't mean you're an expert. It means you're serious.`,
   },
 ]
 
