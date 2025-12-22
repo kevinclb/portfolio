@@ -7,6 +7,55 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  
+  {
+    slug: 'terminal-portfolio',
+    title: 'This Website: Terminal-First Portfolio',
+    summary: 'A terminal-inspired portfolio with an embedded CLI, streaming LLM responses, and a design system built for recruiters. Shipped in one afternoon.',
+    tags: ['React', 'Vite', 'OpenAI', 'Vercel'],
+    content: `This website is the project. I built it from scratch in a single afternoon — a terminal-first portfolio that lets visitors navigate via CLI commands and ask questions answered by an LLM trained on my background. Here's the full technical breakdown.
+
+## Stack Overview
+
+Frontend: React 18 + TypeScript, bundled with Vite. No component library — just a custom design system with CSS variables for tokens (colors, spacing, typography, motion). The terminal is a contentEditable div (not an input) to bypass browser password autofill detection. Routing via react-router-dom with a persistent Layout component that keeps the terminal drawer fixed at the bottom.
+
+Backend: Vercel serverless functions. A single /api/ask endpoint handles the LLM integration. The function streams responses using the Fetch API's ReadableStream, sending Server-Sent Events (SSE) back to the client for real-time token rendering.
+
+## Terminal Architecture
+
+The terminal maintains a history array of typed lines with types: command, output, error, and hint (for styled help text). Commands are parsed in a single handleKeyDown handler — no formal lexer, just string matching and startsWith checks. Navigation commands call react-router's navigate(); the cd command accepts routes as arguments.
+
+The input uses contentEditable instead of <input type="text"> because browsers aggressively offer password autofill on any text input. Switching to contentEditable required custom placeholder rendering via CSS :empty::before and manual textContent management, but eliminated the autofill popup entirely.
+
+The terminal drawer is resizable via pointer events on the header. State is persisted to localStorage so the height survives page reloads. Double-click collapses; drag to resize. Keyboard users can use arrow keys when focused on the header.
+
+## LLM Integration
+
+The /api/ask endpoint accepts a POST with { question: string }, constructs a system prompt with my background context, and calls OpenAI's chat completions API with stream: true. The response is piped through a TransformStream that formats chunks as SSE:
+
+data: {"content":"token"}
+data: [DONE]
+
+On the frontend, handleQuestion reads the stream with a ReadableStream reader, accumulates tokens into state, and updates a streamingText value that replaces the "Thinking..." placeholder in real-time. Error handling gracefully degrades — if the stream fails, the "Thinking..." line is replaced with an error message.
+
+## Design System
+
+All styling uses CSS custom properties defined in index.css. Colors follow a dark-first palette with a neon green accent (#39ff14). Typography uses two fonts: Sora for headings/body, JetBrains Mono for terminal/code/tags. Spacing follows an 8px grid. Motion respects prefers-reduced-motion.
+
+The cursor rules file (.cursor/rules/RULE.md) encodes the design system constraints: no inline styles, no one-off values, component reuse, accessible focus states. This acts as a contract for AI-assisted development — any changes proposed by Cursor must follow these rules.
+
+## Deployment
+
+Vercel handles deployment. The repo is connected to Vercel via GitHub integration — every push to main triggers a build. The domain is registered on Cloudflare with DNS-only CNAME records pointing to cname.vercel-dns.com. Vercel handles SSL termination.
+
+Environment variables (OPENAI_API_KEY) are configured in Vercel's dashboard. The serverless function cold-starts in ~100ms; warm invocations are ~20ms before OpenAI latency.
+
+## Future Plans
+
+I want to add: (1) tab autocomplete for commands, (2) persistent command history with up/down arrow navigation, (3) a "metrics" command that shows fake SRE-style dashboards (p99 latency, error rates) to demonstrate observability thinking, (4) a "trace" command that renders a mock distributed trace, and (5) syntax highlighting for code blocks in LLM responses.
+
+The goal is to make this portfolio feel like a production system — polished, observable, and interactive — while showcasing the kind of tooling I actually enjoy building.`,
+  },
   {
     slug: 'distributed-cache',
     title: 'Distributed Cache System',
@@ -28,17 +77,6 @@ Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
 Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
 
 Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.`,
-  },
-  {
-    slug: 'markdown-compiler',
-    title: 'Custom Markdown Compiler',
-    summary: 'An extensible markdown-to-HTML compiler with plugin support. Features syntax highlighting and custom directive processing.',
-    tags: ['TypeScript', 'Parsing', 'Open Source'],
-    content: `Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.
-
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
-
-Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.`,
-  },
+  }
 ]
 

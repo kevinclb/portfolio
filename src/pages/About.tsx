@@ -16,7 +16,7 @@ function About() {
             → 3 projects
           </Link>
           <Link to="/experience" className="proof-link">
-            → 7+ years experience
+            → 3+ years experience
           </Link>
           <Link to="/writing" className="proof-link">
             → 3 articles
