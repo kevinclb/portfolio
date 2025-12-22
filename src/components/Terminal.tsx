@@ -23,7 +23,6 @@ function Terminal() {
     { type: 'output', text: 'Type "help" for available commands.' },
   ])
   const [isStreaming, setIsStreaming] = useState(false)
-  const [isFocused, setIsFocused] = useState(false)
   const [streamingText, setStreamingText] = useState('')
   const [commandHistory, setCommandHistory] = useState<string[]>([])
   const [historyIndex, setHistoryIndex] = useState(-1)
@@ -67,6 +66,17 @@ function Terminal() {
     document.documentElement.style.setProperty('--terminal-reserved-height', `${reservedHeightPx}px`)
   }, [bodyHeightPx, reservedHeightPx])
 
+  // Move cursor to end of contentEditable
+  const moveCursorToEnd = () => {
+    if (!inputRef.current) return
+    const range = document.createRange()
+    const sel = window.getSelection()
+    range.selectNodeContents(inputRef.current)
+    range.collapse(false) // false = collapse to end
+    sel?.removeAllRanges()
+    sel?.addRange(range)
+  }
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     // Arrow key history navigation
     if (e.key === 'ArrowUp') {
@@ -85,6 +95,7 @@ function Terminal() {
       setHistoryIndex(newIndex)
       if (inputRef.current) {
         inputRef.current.textContent = commandHistory[newIndex]
+        moveCursorToEnd()
       }
       return
     }
@@ -100,11 +111,13 @@ function Terminal() {
         setHistoryIndex(-1)
         if (inputRef.current) {
           inputRef.current.textContent = savedInputRef.current
+          moveCursorToEnd()
         }
       } else {
         setHistoryIndex(newIndex)
         if (inputRef.current) {
           inputRef.current.textContent = commandHistory[newIndex]
+          moveCursorToEnd()
         }
       }
       return
@@ -139,7 +152,44 @@ function Terminal() {
         return
       }
 
-      if (command === 'cd' || command === 'pwd') {
+      // Command-specific help: "<command> help"
+      if (command.endsWith(' help')) {
+        const cmd = command.slice(0, -5).trim()
+        const helpTexts: Record<string, string> = {
+          'ls': 'ls — List available routes (about, experience, projects, writing)',
+          'cd': 'cd <route> — Navigate to a route. Usage: cd projects, cd writing/on-simplicity. Without args, shows current path.',
+          'pwd': 'pwd — Print current route path',
+          'whoami': 'whoami — Display a one-liner about Kevin',
+          'repo': 'repo — Open Kevin\'s GitHub profile in a new tab',
+          'github': 'github — Alias for repo',
+          'about': 'about — Navigate to the About page',
+          'experience': 'experience — Navigate to the Experience page',
+          'projects': 'projects — Navigate to the Projects page',
+          'writing': 'writing — Navigate to the Writing page',
+          'question': 'question <text> — Ask the LLM a question about Kevin. Example: question what projects has kevin worked on?',
+          'help': 'help — Show all available commands',
+          'clear': 'clear — Clear the terminal history',
+          'home': 'home — Navigate to the home page (About)',
+        }
+        
+        if (helpTexts[cmd]) {
+          newHistory.push({ type: 'hint', text: helpTexts[cmd] })
+        } else {
+          newHistory.push({ type: 'error', text: `No help available for: ${cmd}` })
+        }
+        setHistory(newHistory.slice(-MAX_HISTORY_LINES))
+        if (inputRef.current) inputRef.current.textContent = ''
+        return
+      }
+
+      if (command === 'whoami') {
+        newHistory.push({ type: 'output', text: 'kevin — backend engineer, distributed systems enthusiast' })
+      } else if (command === 'repo' || command === 'github') {
+        newHistory.push({ type: 'output', text: '→ Opening github.com/kevinclb...' })
+        window.open('https://github.com/kevinclb', '_blank')
+      } else if (command === 'ls') {
+        newHistory.push({ type: 'output', text: 'about/  experience/  projects/  writing/' })
+      } else if (command === 'cd' || command === 'pwd') {
         newHistory.push({ type: 'output', text: location.pathname })
       } else if (command.startsWith('cd ')) {
         const route = command.slice(3).trim()
@@ -153,7 +203,7 @@ function Terminal() {
       } else if (command === 'help') {
         newHistory.push({
           type: 'hint',
-          text: 'Available commands: cd, about, experience, projects, writing, home, question, help, clear'
+          text: 'Available commands: ls, cd, whoami, repo, about, experience, projects, writing, question, help, clear'
         })
         newHistory.push({
           type: 'hint',
@@ -166,6 +216,10 @@ function Terminal() {
         newHistory.push({
           type: 'hint',
           text: 'Tip: Use ↑/↓ arrow keys to navigate command history'
+        })
+        newHistory.push({
+          type: 'hint',
+          text: 'Tip: Type "<command> help" for details on a specific command'
         })
       } else if (command.startsWith('projects/') || command.startsWith('writing/')) {
         newHistory.push({ type: 'output', text: `→ Navigating to /${command}` })
@@ -439,11 +493,9 @@ function Terminal() {
               role="textbox"
               aria-label="Terminal command input"
               onKeyDown={handleKeyDown}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
               spellCheck={false}
               data-placeholder="type a command..."
-            />{isFocused && <span className="terminal-cursor">▋</span>}
+            />
           </div>
         </div>
       </div>

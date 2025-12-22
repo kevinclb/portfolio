@@ -497,7 +497,7 @@ button:focus-visible {
   color: var(--text);
   font-family: var(--font-mono);
   font-size: max(16px, var(--text-sm));
-  caret-color: transparent;
+  caret-color: var(--accent);
   min-width: 1px;
 }
 
