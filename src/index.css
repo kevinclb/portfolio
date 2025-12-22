@@ -421,6 +421,14 @@ button:focus-visible {
   color: var(--danger);
 }
 
+.terminal-line.hint {
+  color: var(--text);
+}
+
+.terminal-hint-label {
+  color: var(--accent-2);
+}
+
 .terminal-input-row {
   display: flex;
   align-items: center;
