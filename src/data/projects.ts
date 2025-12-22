@@ -57,15 +57,15 @@ I want to add: (1) tab autocomplete for commands, (2) persistent command history
 The goal is to make this portfolio feel like a production system — polished, observable, and interactive — while showcasing the kind of tooling I actually enjoy building.`,
   },
   {
-    slug: 'distributed-cache',
-    title: 'Distributed Cache System',
+    slug: 'distributed-lock',
+    title: 'Distributed Lock System',
     summary: 'A high-performance distributed caching layer built with consistent hashing. Handles millions of requests per second with sub-millisecond latency.',
     tags: ['Go', 'Redis', 'Distributed Systems'],
-    content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    content: `Implemented a fault-tolerant distributed lock system using Redis as the coordination layer, designed specifically for a high-scale crypto cloud developer platform. Each lock is scoped to a composite primary key (user_id:organization_id), providing fine-grained isolation for multitenant workflows. The microservice responsible for lock orchestration leverages Redis with reliable, atomic Lua scripts (using SET NX/EX and key-expiry strategies) for robust mutual exclusion and session expiry, even under high concurrency and process restarts.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+This system was architected to power idempotent retry semantics for API flows prone to refresh-retry race conditions. By persisting lock ownership and intermediate transactional state to Redis, the service enables any subsequent invocation—triggered by a client retry or API failover—to safely resume from the last known checkpoint. This provides recovery from partial failures without the risk of double-processing, aligning with distributed transaction best practices (e.g., SAGA-style orchestration and poison-pill prevention).
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.`,
+The result is a coordinated, stateful retry mechanism supporting distributed transactions across microservices, while remaining horizontally scalable. The solution underpins critical platform flows such as multi-account asset refreshes, transactional ledger updates, and webhook processing, ensuring correctness and at-least-once execution guarantees at scale, with observability hooks tied to key lock lifecycles for debugging and analytics.`,
   },
   {
     slug: 'cli-task-manager',
