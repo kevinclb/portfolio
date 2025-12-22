@@ -12,22 +12,26 @@ export const posts: Post[] = [
     title: 'On Simplicity in Software Design',
     date: '2024-12-15',
     summary: 'Why the best code is often the code you don\'t write. Thoughts on minimalism and intentional design in software engineering.',
-    content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    content: `The hardest part of building software isn't adding features — it's knowing what to leave out. Every line of code is a liability: something to maintain, debug, and explain. The best systems aren't the ones with the most capabilities. They're the ones where every piece earns its place.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Simplicity isn't about doing less. It's about clarity of purpose. A simple system makes the right tradeoffs obvious. It has fewer moving parts, which means fewer ways to break. When something does go wrong, you can hold the whole thing in your head long enough to fix it.
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.`,
+The trap is thinking simplicity comes naturally. It doesn't. Complexity is the default — it accretes with every rushed decision, every "we'll clean this up later," every feature added without removing something else. Simplicity requires active resistance: saying no, deleting code, and revisiting assumptions.
+
+If you want to write better software, start by asking what you can remove. The best code is often the code you don't write.`,
   },
   {
     slug: 'terminal-workflows',
     title: 'Building Better Terminal Workflows',
     date: '2024-11-28',
     summary: 'A deep dive into customizing your terminal environment for maximum productivity. From shell aliases to custom scripts.',
-    content: `Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+    content: `Your terminal is the closest thing to a superpower that software gives you. But most of us leave it stock — default prompts, no aliases, scattered dotfiles we copy-paste from Stack Overflow and never revisit.
 
-Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+The best terminal setups aren't about aesthetics. They're about removing friction from the things you do fifty times a day. A well-tuned shell should feel like muscle memory: git status becomes gs, directory navigation collapses into a few keystrokes, and complex pipelines get wrapped in functions you actually remember.
 
-Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.`,
+Start small. Pick the three commands you type most often and alias them. Then build up: add a prompt that shows git branch and status, configure fzf for fuzzy history search, write a function that spins up your dev environment in one shot. Each tweak compounds.
+
+The real unlock isn't any single tool — it's the habit of noticing friction and scripting it away. Treat your dotfiles like code: version them, document them, iterate on them. Over time, your terminal becomes an extension of how you think, not just a place where you type commands.`,
   },
   {
     slug: 'learning-in-public',

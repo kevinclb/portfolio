@@ -10,7 +10,7 @@ const TERMINAL_HEADER_HEIGHT_PX = 40
 const DOUBLE_TAP_WINDOW_MS = 300
 
 interface HistoryLine {
-  type: 'command' | 'output' | 'error'
+  type: 'command' | 'output' | 'error' | 'hint'
   text: string
 }
 
@@ -90,17 +90,26 @@ function Terminal() {
 
       if (command === 'cd' || command === 'pwd') {
         newHistory.push({ type: 'output', text: location.pathname })
+      } else if (command.startsWith('cd ')) {
+        const route = command.slice(3).trim()
+        if (!route) {
+          newHistory.push({ type: 'output', text: location.pathname })
+        } else {
+          const path = route.startsWith('/') ? route : `/${route}`
+          newHistory.push({ type: 'output', text: `→ Navigating to ${path}` })
+          navigate(path)
+        }
       } else if (command === 'help') {
         newHistory.push({
-          type: 'output',
+          type: 'hint',
           text: 'Available commands: cd, about, experience, projects, writing, home, question, help, clear'
         })
         newHistory.push({
-          type: 'output',
-          text: 'Navigate to project/writing detail: projects/<slug> or writing/<slug>'
+          type: 'hint',
+          text: 'Navigate: cd <route> (e.g., cd projects, cd writing/on-simplicity)'
         })
         newHistory.push({
-          type: 'output',
+          type: 'hint',
           text: 'Ask a question: question <your question about Kevin>'
         })
       } else if (command.startsWith('projects/') || command.startsWith('writing/')) {
@@ -340,14 +349,30 @@ function Terminal() {
       </div>
       <div className="terminal-body">
         <div className="terminal-history" ref={historyRef}>
-          {history.map((line, i) => (
-            <div key={i} className={`terminal-line ${line.type}`}>
-              {/* Show streaming text in place of "Thinking..." */}
-              {isStreaming && line.text === 'Thinking...' && i === history.length - 1
-                ? (streamingText || 'Thinking...')
-                : line.text}
-            </div>
-          ))}
+          {history.map((line, i) => {
+            const isStreaming_ = isStreaming && line.text === 'Thinking...' && i === history.length - 1
+            const content = isStreaming_ ? (streamingText || 'Thinking...') : line.text
+
+            // For hint lines, highlight the label (text before first colon)
+            if (line.type === 'hint' && !isStreaming_) {
+              const colonIndex = line.text.indexOf(':')
+              if (colonIndex !== -1) {
+                const label = line.text.slice(0, colonIndex + 1)
+                const rest = line.text.slice(colonIndex + 1)
+                return (
+                  <div key={i} className="terminal-line hint">
+                    <span className="terminal-hint-label">{label}</span>{rest}
+                  </div>
+                )
+              }
+            }
+
+            return (
+              <div key={i} className={`terminal-line ${line.type}`}>
+                {content}
+              </div>
+            )
+          })}
         </div>
         <div className="terminal-input-row">
           <span className="terminal-prompt">$</span>
