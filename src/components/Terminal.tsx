@@ -23,6 +23,7 @@ function Terminal() {
     { type: 'output', text: 'Type "help" for available commands.' },
   ])
   const [isStreaming, setIsStreaming] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
   const [streamingText, setStreamingText] = useState('')
   const [bodyHeightPx, setBodyHeightPx] = useState<number>(() => {
     const raw = localStorage.getItem('terminal.bodyHeightPx')
@@ -376,16 +377,20 @@ function Terminal() {
         </div>
         <div className="terminal-input-row">
           <span className="terminal-prompt">$</span>
-          <div
-            ref={inputRef}
-            className="terminal-input"
-            contentEditable
-            role="textbox"
-            aria-label="Terminal command input"
-            onKeyDown={handleKeyDown}
-            spellCheck={false}
-            data-placeholder="type a command..."
-          />
+          <div className="terminal-input-wrapper">
+            <div
+              ref={inputRef}
+              className="terminal-input"
+              contentEditable
+              role="textbox"
+              aria-label="Terminal command input"
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              spellCheck={false}
+              data-placeholder="type a command..."
+            />{isFocused && <span className="terminal-cursor">▋</span>}
+          </div>
         </div>
       </div>
     </div>
