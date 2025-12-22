@@ -22,6 +22,8 @@ function Terminal() {
     { type: 'output', text: 'If you type "question <enter a question about me>", an LLM trained on my life will answer your question.'},
     { type: 'output', text: 'Type "help" for available commands.' },
   ])
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [streamingText, setStreamingText] = useState('')
   const [bodyHeightPx, setBodyHeightPx] = useState<number>(() => {
     const raw = localStorage.getItem('terminal.bodyHeightPx')
     const parsed = raw ? Number(raw) : NaN
@@ -48,7 +50,7 @@ function Terminal() {
     if (historyRef.current) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight
     }
-  }, [history])
+  }, [history, streamingText])
 
   useEffect(() => {
     if (bodyHeightPx > 0) {
@@ -64,6 +66,10 @@ function Terminal() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
+      
+      // Prevent new commands while streaming
+      if (isStreaming) return
+      
       const command = (inputRef.current?.textContent || '').trim().toLowerCase()
 
       if (command === '') {
@@ -87,11 +93,15 @@ function Terminal() {
       } else if (command === 'help') {
         newHistory.push({
           type: 'output',
-          text: 'Available commands: cd, about, experience, projects, writing, home, help, clear'
+          text: 'Available commands: cd, about, experience, projects, writing, home, question, help, clear'
         })
         newHistory.push({
           type: 'output',
           text: 'Navigate to project/writing detail: projects/<slug> or writing/<slug>'
+        })
+        newHistory.push({
+          type: 'output',
+          text: 'Ask a question: question <your question about Kevin>'
         })
       } else if (command.startsWith('projects/') || command.startsWith('writing/')) {
         newHistory.push({ type: 'output', text: `→ Navigating to /${command}` })
@@ -99,6 +109,25 @@ function Terminal() {
       } else if (command === 'home') {
         newHistory.push({ type: 'output', text: '→ Navigating to /about' })
         navigate('/about')
+      } else if (command.startsWith('question ')) {
+        const questionText = command.slice('question '.length).trim()
+        if (!questionText) {
+          newHistory.push({
+            type: 'error',
+            text: 'Please provide a question. Usage: question <your question>'
+          })
+        } else {
+          newHistory.push({ type: 'output', text: 'Thinking...' })
+          setHistory(newHistory.slice(-MAX_HISTORY_LINES))
+          if (inputRef.current) inputRef.current.textContent = ''
+          handleQuestion(questionText)
+          return
+        }
+      } else if (command === 'question') {
+        newHistory.push({
+          type: 'error',
+          text: 'Please provide a question. Usage: question <your question>'
+        })
       } else if (VALID_COMMANDS.includes(command)) {
         newHistory.push({ type: 'output', text: `→ Navigating to /${command}` })
         navigate(`/${command}`)
@@ -111,6 +140,88 @@ function Terminal() {
 
       setHistory(newHistory.slice(-MAX_HISTORY_LINES))
       if (inputRef.current) inputRef.current.textContent = ''
+    }
+  }
+
+  const handleQuestion = async (questionText: string) => {
+    setIsStreaming(true)
+    setStreamingText('')
+
+    try {
+      const response = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: questionText }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get response')
+      }
+
+      const reader = response.body?.getReader()
+      if (!reader) {
+        throw new Error('No response body')
+      }
+
+      const decoder = new TextDecoder()
+      let accumulatedText = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value, { stream: true })
+        const lines = chunk.split('\n')
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6)
+            if (data === '[DONE]') continue
+            
+            try {
+              const parsed = JSON.parse(data)
+              if (parsed.content) {
+                accumulatedText += parsed.content
+                setStreamingText(accumulatedText)
+              } else if (parsed.error) {
+                throw new Error(parsed.error)
+              }
+            } catch {
+              // Ignore JSON parse errors for incomplete chunks
+            }
+          }
+        }
+      }
+
+      // Replace "Thinking..." with the final response
+      setHistory((prev) => {
+        const newHistory = [...prev]
+        // Find and replace the last "Thinking..." message
+        for (let i = newHistory.length - 1; i >= 0; i--) {
+          if (newHistory[i].text === 'Thinking...') {
+            newHistory[i] = { type: 'output', text: accumulatedText || 'No response received.' }
+            break
+          }
+        }
+        return newHistory.slice(-MAX_HISTORY_LINES)
+      })
+    } catch (error) {
+      setHistory((prev) => {
+        const newHistory = [...prev]
+        for (let i = newHistory.length - 1; i >= 0; i--) {
+          if (newHistory[i].text === 'Thinking...') {
+            newHistory[i] = { 
+              type: 'error', 
+              text: `Error: ${error instanceof Error ? error.message : 'Failed to get response'}` 
+            }
+            break
+          }
+        }
+        return newHistory.slice(-MAX_HISTORY_LINES)
+      })
+    } finally {
+      setIsStreaming(false)
+      setStreamingText('')
     }
   }
 
@@ -231,7 +342,10 @@ function Terminal() {
         <div className="terminal-history" ref={historyRef}>
           {history.map((line, i) => (
             <div key={i} className={`terminal-line ${line.type}`}>
-              {line.text}
+              {/* Show streaming text in place of "Thinking..." */}
+              {isStreaming && line.text === 'Thinking...' && i === history.length - 1
+                ? (streamingText || 'Thinking...')
+                : line.text}
             </div>
           ))}
         </div>

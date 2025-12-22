@@ -75,7 +75,7 @@ function About() {
           <li>
             <span className="text-muted">LinkedIn:</span>{' '}
             <a href="https://linkedin.com/in/kevin-babou" target="_blank" rel="noopener noreferrer">
-              linkedin.com/in/kevin-babouc
+              linkedin.com/in/kevin-babou
             </a>
           </li>
         </ul>

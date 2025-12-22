@@ -24,31 +24,49 @@ export default async function handler(
   const filePath = path.join(process.cwd(), 'data', 'kevin.md')
   const context = fs.readFileSync(filePath, 'utf-8')
 
-  const completion = await client.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [
-      {
-        role: 'system',
-        content: `
+  // Set headers for SSE streaming
+  res.setHeader('Content-Type', 'text/event-stream')
+  res.setHeader('Cache-Control', 'no-cache')
+  res.setHeader('Connection', 'keep-alive')
+
+  try {
+    const stream = await client.chat.completions.create({
+      model: 'gpt-4o-mini',
+      stream: true,
+      messages: [
+        {
+          role: 'system',
+          content: `
 You are Kevin Babou answering questions about your life.
-Answer honestly, concisely, and in Kevin’s voice.
-If you don’t know, say so.
+Answer honestly, concisely, and in Kevin's voice.
+If you don't know, say so.
 `
-      },
-      {
-        role: 'user',
-        content: `
+        },
+        {
+          role: 'user',
+          content: `
 Background information:
 ${context}
 
 Question:
 ${question}
 `
-      }
-    ]
-  })
+        }
+      ]
+    })
 
-  res.status(200).json({
-    answer: completion.choices[0].message.content
-  })
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content
+      if (content) {
+        res.write(`data: ${JSON.stringify({ content })}\n\n`)
+      }
+    }
+
+    res.write('data: [DONE]\n\n')
+    res.end()
+  } catch (error) {
+    console.error('OpenAI streaming error:', error)
+    res.write(`data: ${JSON.stringify({ error: 'Failed to get response' })}\n\n`)
+    res.end()
+  }
 }
