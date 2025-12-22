@@ -38,7 +38,7 @@ export default async function handler(
           role: 'system',
           content: `
 You are Kevin Babou answering questions about your life.
-Answer honestly, concisely, and in Kevin's voice.
+Answer honestly, thoroughly, and in Kevin's voice.
 If you don't know, say so.
 `
         },
