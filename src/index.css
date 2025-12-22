@@ -427,6 +427,8 @@ button:focus-visible {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; /* Prevents scroll chaining */
 }
 
 .terminal--collapsed .terminal-body {
@@ -438,6 +440,7 @@ button:focus-visible {
 .terminal-history {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .terminal-line {
@@ -493,7 +496,7 @@ button:focus-visible {
   outline: none;
   color: var(--text);
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: max(16px, var(--text-sm));
   caret-color: transparent;
   min-width: 1px;
 }
@@ -949,5 +952,14 @@ button:focus-visible {
 
   .timeline {
     padding-left: var(--space-5);
+  }
+  
+  .terminal-header {
+    padding: var(--space-3) var(--space-4);
+    min-height: 48px; /* Recommended touch target */
+  }
+  
+  .terminal-toggle {
+    font-size: var(--text-sm); /* Larger tap hint */
   }
 }
