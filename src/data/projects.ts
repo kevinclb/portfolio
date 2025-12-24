@@ -77,6 +77,25 @@ The result is a coordinated, stateful retry mechanism supporting distributed tra
 Tasks can be organized with tags and deadlines, and all data syncs securely to a cloud backend for seamless cross-device access.
 
 Designed to be lightweight, scriptable, and productive for power users.`,
+  },
+  {
+    slug: 'witeboard',
+    title: 'Witeboard — Real-Time Collaborative Whiteboard',
+    summary: 'A globally distributed, real-time collaborative whiteboard with sub-100ms sync latency, infinite canvas, and strong consistency guarantees.',
+    tags: ['TypeScript', 'WebSockets', 'PostgreSQL', 'React', 'Railway'],
+    content: `Witeboard is a globally distributed, real-time collaborative whiteboard that enables multiple users anywhere in the world to draw, sketch, and create together on a shared infinite canvas. Inspired by tools like Excalidraw and Figma, the platform supports freehand drawing with multiple brush types (pencil, marker, paintbrush), geometric shapes (rectangles, ellipses, lines), text annotations, and a full-featured eraser—all synchronized in real-time with sub-100ms latency. Users can pan and zoom the infinite canvas, with mobile-first touch controls, and authenticated users can create private whiteboards for personal or team use alongside the global public canvas.
+
+## Consistency Model & Architecture
+
+The system is built on a strong consistency model where the server acts as the single source of truth for event ordering. The architecture follows a monorepo structure with three packages: a React + Vite client, a Node.js WebSocket server, and shared TypeScript types. Drawing operations are captured as immutable events (strokes, shapes, text, deletions) and sent to the server, which assigns authoritative sequence numbers before persisting to PostgreSQL and broadcasting to all connected clients. This append-only event log enables deterministic replay—any client can reconstruct the exact canvas state by replaying events in sequence order, ensuring all users see identical content regardless of network timing.
+
+## Canvas Rendering Architecture
+
+The frontend employs a three-layer canvas architecture optimized for 60fps rendering: a history canvas for confirmed content, a live canvas for in-progress strokes and real-time previews, and a cursor overlay for displaying other users' pointer positions. Rather than using React state for drawing (which would be too slow), the canvas engine uses imperative rendering with direct Canvas 2D API calls, with world-coordinate transformations enabling smooth pan/zoom. A key technical challenge involved managing z-ordering between layers—local strokes on the live canvas could visually obscure shapes on the history canvas, requiring careful synchronization when server-confirmed events arrive to maintain correct visual ordering.
+
+## Deployment & Infrastructure
+
+The application is deployed on Railway with a multi-stage Docker build, serving the compiled React frontend as static assets from the same Node.js server that handles WebSocket connections. Authentication is handled via Clerk with JWT verification, supporting both anonymous drawing on the public board and authenticated private whiteboards. The PostgreSQL database runs as a managed Railway service with idempotent migrations executed on server startup. The entire stack is TypeScript end-to-end, with strict type checking ensuring API contracts between client, server, and shared packages remain synchronized across the distributed system.`,
   }
 ]
 
