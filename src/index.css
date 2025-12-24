@@ -871,6 +871,91 @@ button:focus-visible {
   margin-bottom: var(--space-4);
 }
 
+/* Markdown content styles */
+.markdown-content h2 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.markdown-content h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
+}
+
+.markdown-content h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  padding-left: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.markdown-content li {
+  margin-bottom: var(--space-2);
+}
+
+.markdown-content code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  background-color: var(--surface-2);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+}
+
+.markdown-content pre {
+  background-color: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  overflow-x: auto;
+  margin-bottom: var(--space-4);
+}
+
+.markdown-content pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+
+.markdown-content blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: var(--space-4);
+  margin: var(--space-4) 0;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.markdown-content strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.markdown-content em {
+  font-style: italic;
+}
+
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--space-6) 0;
+}
+
 /* =============================================================================
    CALLOUT
 ============================================================================= */

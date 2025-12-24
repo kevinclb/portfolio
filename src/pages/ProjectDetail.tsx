@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import Markdown from 'react-markdown'
 import { projects } from '../data/projects'
 
 function ProjectDetail() {
@@ -37,10 +38,8 @@ function ProjectDetail() {
         </div>
       </header>
 
-      <div className="detail-content">
-        {project.content.split('\n\n').map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
-        ))}
+      <div className="detail-content markdown-content">
+        <Markdown>{project.content}</Markdown>
       </div>
     </div>
   )

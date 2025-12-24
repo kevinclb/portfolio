@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import Markdown from 'react-markdown'
 import { posts } from '../data/writing'
 
 function WritingDetail() {
@@ -31,10 +32,8 @@ function WritingDetail() {
         <p className="detail-meta">{post.date}</p>
       </header>
 
-      <div className="detail-content">
-        {post.content.split('\n\n').map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
-        ))}
+      <div className="detail-content markdown-content">
+        <Markdown>{post.content}</Markdown>
       </div>
     </div>
   )
