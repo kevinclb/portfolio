@@ -1,46 +1,48 @@
 /* =============================================================================
    DESIGN TOKENS
    Following portfolio design system rules:
-   - Dark-first, neon accent
-   - 2-font system (sans + mono)
+   - Dark-first, amber CRT accent
+   - 3-font system (display + sans + mono)
    - 8px grid spacing
    - Consistent radii + elevation
    - Motion for state changes only
 ============================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
   /* -------------------------------------------------------------------------
-     COLORS (dark-first, neon accent)
+     COLORS (amber CRT palette -- warm retro terminal aesthetic)
   ------------------------------------------------------------------------- */
-  /* Neutrals */
-  /* Deeper blacks, Cursor/Stripe-like dark neutrals */
-  --bg: #05060a;
-  --surface-1: #0b0d12;
-  --surface-2: #10131a;
-  --border: rgba(255, 255, 255, 0.08);
-  --text: rgba(255, 255, 255, 0.92);
-  --muted: rgba(255, 255, 255, 0.62);
+  /* Neutrals -- warm blacks (stone-tinted) */
+  --bg: #0c0a09;
+  --surface-1: #1c1917;
+  --surface-2: #292524;
+  --surface-3: #3a3633;
+  --border: rgba(245, 158, 11, 0.12);
+  --text: rgba(255, 247, 237, 0.92);
+  --muted: rgba(255, 247, 237, 0.55);
 
-  /* Accent - Muted neon green (more “terminal”, less “laser”) */
-  --accent: #4ade80;
-  --accent-dim: rgba(74, 222, 128, 0.14);
-  --accent-glow: rgba(74, 222, 128, 0.35);
+  /* Accent -- amber (primary) */
+  --accent: #f59e0b;
+  --accent-bright: #fbbf24;
+  --accent-dim: rgba(245, 158, 11, 0.12);
+  --accent-glow: rgba(245, 158, 11, 0.25);
 
-  /* Accent-2 - Secondary (use sparingly: hover/focus/special only) */
-  --accent-2: #60a5fa;
-  --accent-2-dim: rgba(96, 165, 250, 0.16);
+  /* Accent-2 -- cool slate (secondary, for contrast) */
+  --accent-2: #94a3b8;
+  --accent-2-dim: rgba(148, 163, 184, 0.12);
 
   /* Semantics */
   --success: #34d399;
   --warning: #fbbf24;
-  --danger: #fb7185;
+  --danger: #ef4444;
   --info: #60a5fa;
 
   /* -------------------------------------------------------------------------
-     TYPOGRAPHY (2-font system)
+     TYPOGRAPHY (3-font system: display + sans + mono)
   ------------------------------------------------------------------------- */
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
 
@@ -99,13 +101,13 @@
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
 
   /* Material surfaces */
-  --surface-glass: rgba(11, 13, 18, 0.72);
-  --surface-glass-strong: rgba(11, 13, 18, 0.88);
+  --surface-glass: rgba(28, 25, 23, 0.72);
+  --surface-glass-strong: rgba(28, 25, 23, 0.88);
 
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.10);
-  --border-strong: rgba(255, 255, 255, 0.14);
+  --border-subtle: rgba(255, 247, 237, 0.06);
+  --border-default: rgba(255, 247, 237, 0.10);
+  --border-strong: rgba(255, 247, 237, 0.14);
 
   /* Elevation */
   --elev-1: 0 1px 2px rgba(0,0,0,0.35);
@@ -113,9 +115,9 @@
   --elev-3: 0 16px 48px rgba(0,0,0,0.55);
 
   /* Terminal-specific */
-  --terminal-border: var(--border-default);
-  --terminal-shadow: 0 -1px 0 var(--accent-dim), 0 -12px 40px rgba(0,0,0,0.55);
-  --terminal-scanline: rgba(0, 0, 0, 0.06);
+  --terminal-border: var(--accent);
+  --terminal-shadow: 0 4px 40px rgba(245, 158, 11, 0.12), 0 0 0 1px rgba(245, 158, 11, 0.08);
+  --terminal-scanline: rgba(0, 0, 0, 0.04);
 
   /* Type rhythm */
   --tracking-tight: -0.02em;
@@ -160,8 +162,7 @@ body {
   color: var(--text);
   background-color: var(--bg);
   background-image:
-    radial-gradient(1200px 700px at 20% -10%, rgba(74, 222, 128, 0.08), transparent 60%),
-    radial-gradient(900px 600px at 90% 0%, rgba(96, 165, 250, 0.06), transparent 55%);
+    radial-gradient(1200px 700px at 15% -5%, rgba(245, 158, 11, 0.06), transparent 60%);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -172,7 +173,7 @@ body {
 ------------------------------------------------------------------------- */
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
   line-height: var(--leading-tight);
   color: var(--text);
