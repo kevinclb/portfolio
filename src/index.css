@@ -622,6 +622,7 @@ button:focus-visible {
 }
 
 .hero-name {
+  font-family: var(--font-display);
   font-size: var(--text-3xl);
   font-weight: 700;
   margin-bottom: var(--space-2);
@@ -682,6 +683,7 @@ button:focus-visible {
 }
 
 .section-title {
+  font-family: var(--font-display);
   font-size: var(--text-xl);
   font-weight: 600;
   color: var(--text);
@@ -736,6 +738,7 @@ button:focus-visible {
 }
 
 .card-title {
+  font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text);
@@ -845,6 +848,7 @@ button:focus-visible {
 }
 
 .timeline-company {
+  font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text);
@@ -909,6 +913,7 @@ button:focus-visible {
 }
 
 .detail-title {
+  font-family: var(--font-display);
   font-size: var(--text-2xl);
   font-weight: 700;
   margin-bottom: var(--space-3);
