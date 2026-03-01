@@ -6,17 +6,17 @@ function About() {
       {/* Hero Header */}
       <header className="hero">
         <h1 className="hero-name">Kevin Babou</h1>
-        <p className="hero-role">Software Engineer</p>
+        <p className="hero-role">Software Engineer @ Chime</p>
         <p className="hero-tagline">
-          Building resilient distributed systems and developer tools.
-          Focused on latency, reliability, and developer experience.
+          Building agentic AI workflows and high-throughput transaction infrastructure.
+          Previously shipping blockchain interoperability at Coinbase.
         </p>
         <div className="proof-strip">
-          <Link to="/projects" className="proof-link">
-            → 3 projects
-          </Link>
           <Link to="/experience" className="proof-link">
-            → 3+ years experience
+            → 4+ years experience
+          </Link>
+          <Link to="/projects" className="proof-link">
+            → AI & platform engineering
           </Link>
           <Link to="/writing" className="proof-link">
             → 3 articles
@@ -24,29 +24,30 @@ function About() {
         </div>
       </header>
 
-      {/* Technical Interests */}
+      {/* What I Build */}
       <section className="section">
         <header className="section-header">
-          <h2 className="section-title">Technical Interests</h2>
+          <h2 className="section-title">What I Build</h2>
         </header>
         <ul>
-          <li>Designing APIs, services, and data pipelines that scale</li>
-          <li>Distributed systems — consensus, replication, and making things fail gracefully</li>
-          <li>LLMs and AI infrastructure, including interacting with them and building tools around them</li>
-          <li>Performance and scalability — profiling, caching, and shaving milliseconds</li>
+          <li>Agentic LLM pipelines over Amazon Bedrock powering features for 25M+ users</li>
+          <li>Transaction processing at 350 purchases/sec (30M/day) with real-time categorization</li>
+          <li>Cross-service idempotency guarantees during a 25M account migration</li>
+          <li>Temporal workflows for reliable $100M+ crypto transfer processing</li>
+          <li>0-to-1 services in Go, Ruby, and Python shipping to production</li>
         </ul>
       </section>
 
-      {/* Hobbies */}
+      {/* Right Now */}
       <section className="section">
         <header className="section-header">
-          <h2 className="section-title">Beyond Code</h2>
+          <h2 className="section-title">Right Now</h2>
         </header>
         <ul>
-          <li>Lifting weights and playing staying active through sports</li>
-          <li>Staying up to date on current events</li>
-          <li>Playing chess and strategy board games</li>
-          <li>Learning to play the guitar in my free time</li>
+          <li>Leading AI application experience at Chime, reporting to Director & CTO</li>
+          <li>Experimenting with Claude Code and agentic coding workflows</li>
+          <li>Lifting heavy, playing chess, learning guitar</li>
+          <li>Watching Severance and Pluribus with my wife Ana</li>
         </ul>
       </section>
 
@@ -58,7 +59,7 @@ function About() {
         <ul>
           <li>
             <span className="text-muted">Email:</span>{' '}
-            <a href="mailto:hello@example.com">kevincbabou@gmail.com</a>
+            <a href="mailto:kevincbabou@gmail.com">kevincbabou@gmail.com</a>
           </li>
           <li>
             <span className="text-muted">GitHub:</span>{' '}
@@ -67,9 +68,9 @@ function About() {
             </a>
           </li>
           <li>
-            <span className="text-muted">Other Github:</span>{' '}
+            <span className="text-muted">GitHub (work):</span>{' '}
             <a href="https://github.com/kevinbabou" target="_blank" rel="noopener noreferrer">
-              github.com/kevinbabou (work so commits are private)
+              github.com/kevinbabou
             </a>
           </li>
           <li>
