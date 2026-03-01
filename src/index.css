@@ -283,7 +283,6 @@ button:focus-visible {
 .main-content {
   flex: 1;
   padding: var(--space-6);
-  padding-bottom: var(--terminal-reserved-height, 240px); /* Space for terminal */
   max-width: var(--max-w-wide);
   margin: 0 auto;
   width: 100%;
@@ -358,90 +357,140 @@ button:focus-visible {
 }
 
 /* =============================================================================
-   TERMINAL DRAWER
+   TERMINAL -- FLOATING WINDOW
 ============================================================================= */
 
-.terminal {
+/* Minimized pill */
+.terminal-pill {
+  position: fixed;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--surface-2);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  z-index: 200;
+  box-shadow: var(--terminal-shadow);
+  transition: all var(--dur-fast) var(--ease-standard);
+}
+
+.terminal-pill:hover {
+  background-color: var(--accent-dim);
+  box-shadow: var(--terminal-shadow), var(--glow-accent);
+}
+
+.terminal-pill-icon {
+  font-size: 10px;
+}
+
+/* Floating terminal (desktop) */
+.terminal--floating {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-glass-strong);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--terminal-shadow);
+  font-family: var(--font-mono);
+  z-index: 200;
+  overflow: hidden;
+}
+
+/* Mobile terminal (bottom sheet) */
+.terminal--mobile {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
   background-color: var(--surface-glass-strong);
   backdrop-filter: blur(10px);
   border-top: 1px solid var(--accent);
-  box-shadow: var(--terminal-shadow);
   font-family: var(--font-mono);
   z-index: 200;
-  transition: box-shadow var(--dur-normal) var(--ease-standard);
 }
-
 
 .terminal-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: var(--space-2) var(--space-4);
-  background: linear-gradient(180deg, var(--surface-2) 0%, rgba(18, 18, 26, 0.95) 100%);
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
   border-bottom: 1px solid var(--border);
   user-select: none;
-  cursor: ns-resize;
+  cursor: grab;
+  flex-shrink: 0;
 }
 
-/* Window controls (decorative) */
-.terminal-header::before {
-  content: '';
+.terminal-header:active {
+  cursor: grabbing;
+}
+
+.terminal-dots {
   display: flex;
   gap: 6px;
-  width: 52px;
+  margin-right: var(--space-4);
 }
 
-.terminal-header::after {
-  content: '● ● ●';
-  position: absolute;
-  left: var(--space-4);
-  font-size: 8px;
-  letter-spacing: 4px;
-  color: var(--muted);
-  opacity: 0.5;
+.terminal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-standard);
 }
 
-.terminal-header:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
+.terminal-dot:hover {
+  opacity: 0.8;
+}
+
+.terminal-dot--close {
+  background-color: #ef4444;
+}
+
+.terminal-dot--minimize {
+  background-color: #fbbf24;
+}
+
+.terminal-dot--maximize {
+  background-color: #22c55e;
 }
 
 .terminal-title {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  color: var(--accent);
-  font-weight: 500;
-  text-shadow: var(--glow-accent-sm);
-}
-
-.terminal-title::before {
-  content: '⟩';
-  font-weight: 700;
-}
-
-.terminal-toggle {
   font-size: var(--text-xs);
   color: var(--muted);
+  font-weight: 500;
+  flex: 1;
+  text-align: center;
+}
+
+.terminal-title-spacer {
+  width: 52px;
 }
 
 .terminal-body {
   position: relative;
-  height: var(--terminal-body-height, 200px);
+  flex: 1;
   padding: var(--space-3) var(--space-4);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain; /* Prevents scroll chaining */
+  overscroll-behavior: contain;
 }
 
-/* Subtle scanline overlay - body only */
+/* Subtle scanline overlay */
 .terminal-body::after {
   content: '';
   position: absolute;
@@ -457,12 +506,6 @@ button:focus-visible {
   z-index: 10;
 }
 
-.terminal--collapsed .terminal-body {
-  height: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
 .terminal-history {
   flex: 1;
   overflow-y: auto;
@@ -473,11 +516,12 @@ button:focus-visible {
   font-size: var(--text-sm);
   color: var(--muted);
   margin-bottom: var(--space-1);
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .terminal-line.command {
   color: var(--accent);
-  text-shadow: var(--glow-accent-sm);
 }
 
 .terminal-line.output {
@@ -507,12 +551,12 @@ button:focus-visible {
   gap: var(--space-2);
   margin-top: var(--space-2);
   flex-wrap: nowrap;
+  flex-shrink: 0;
 }
 
 .terminal-prompt {
   color: var(--accent);
   font-weight: 600;
-  text-shadow: var(--glow-accent-sm);
 }
 
 .terminal-input-wrapper {
@@ -530,6 +574,7 @@ button:focus-visible {
   font-size: max(16px, var(--text-sm));
   caret-color: var(--accent);
   min-width: 1px;
+  width: 100%;
 }
 
 .terminal-input:empty::before {
@@ -538,15 +583,29 @@ button:focus-visible {
   opacity: 0.5;
 }
 
-/* Blinking cursor */
-.terminal-cursor {
-  color: var(--accent);
-  animation: blink 1s step-end infinite;
-  text-shadow: var(--glow-accent-sm);
-  font-size: var(--text-sm);
-  line-height: 1;
+/* Resize handle (bottom-right corner) */
+.terminal-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: se-resize;
 }
 
+.terminal-resize-handle::before {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  opacity: 0.4;
+}
+
+/* Blinking cursor */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
@@ -1042,7 +1101,7 @@ button:focus-visible {
 @media (max-width: 768px) {
   .main-content {
     padding: var(--space-4);
-    padding-bottom: 240px;
+    padding-bottom: 300px;
   }
 
   .navbar {
@@ -1068,14 +1127,5 @@ button:focus-visible {
 
   .timeline {
     padding-left: var(--space-5);
-  }
-  
-  .terminal-header {
-    padding: var(--space-3) var(--space-4);
-    min-height: 48px; /* Recommended touch target */
-  }
-  
-  .terminal-toggle {
-    font-size: var(--text-sm); /* Larger tap hint */
   }
 }

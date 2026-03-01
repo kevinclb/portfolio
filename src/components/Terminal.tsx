@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useMemo } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { services, formatServiceTable } from '../data/ops-services'
 import { traces, formatTraceList, formatTraceDetail } from '../data/ops-traces'
@@ -6,12 +6,12 @@ import { formatRunbook } from '../data/ops-runbook'
 import { formatPostmortem } from '../data/ops-postmortem'
 
 const VALID_COMMANDS = ['about', 'experience', 'projects', 'writing', 'home', 'help', 'clear']
-const DEFAULT_BODY_HEIGHT_PX = 200
-const MIN_BODY_HEIGHT_PX = 0
-const COLLAPSE_THRESHOLD_PX = 56
+const DEFAULT_WIDTH = 560
+const DEFAULT_HEIGHT = 380
+const MIN_WIDTH = 320
+const MIN_HEIGHT = 200
 const MAX_HISTORY_LINES = 300
-const TERMINAL_HEADER_HEIGHT_PX = 40
-const DOUBLE_TAP_WINDOW_MS = 300
+const MOBILE_BREAKPOINT = 768
 
 interface HistoryLine {
   type: 'command' | 'output' | 'error' | 'hint' | 'prompt'
@@ -27,13 +27,7 @@ interface EmailFormData {
 }
 
 function Terminal() {
-  const [history, setHistory] = useState<HistoryLine[]>([
-    { type: 'output', text: 'Welcome! I\'ve designed this terminal to allow you to programmatically navigate my portfolio.' },
-    { type: 'output', text: 'Some of the things you can do include typing a route like "projects", "experience", or "writing".' },
-    // { type: 'output', text: 'and hitting enter to navigate to that page.'},
-    { type: 'output', text: 'If you type "question <enter a question about me>", an LLM trained on my life will answer your question.'},
-    { type: 'output', text: 'Type "help" for available commands.' },
-  ])
+  const [history, setHistory] = useState<HistoryLine[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamingText, setStreamingText] = useState('')
   const [commandHistory, setCommandHistory] = useState<string[]>([])
@@ -41,23 +35,26 @@ function Terminal() {
   const [emailFormData, setEmailFormData] = useState<EmailFormData>({ name: '', email: '', message: '' })
   const [historyIndex, setHistoryIndex] = useState(-1)
   const savedInputRef = useRef<string>('')
-  const [bodyHeightPx, setBodyHeightPx] = useState<number>(() => {
-    const raw = localStorage.getItem('terminal.bodyHeightPx')
-    const parsed = raw ? Number(raw) : NaN
-    return Number.isFinite(parsed) ? parsed : DEFAULT_BODY_HEIGHT_PX
-  })
+
+  const [windowPos, setWindowPos] = useState(() => ({
+    x: typeof window !== 'undefined' ? Math.max(40, window.innerWidth * 0.55 - DEFAULT_WIDTH / 2) : 200,
+    y: typeof window !== 'undefined' ? Math.max(80, window.innerHeight * 0.15) : 100,
+  }))
+  const [windowSize, setWindowSize] = useState({ w: DEFAULT_WIDTH, h: DEFAULT_HEIGHT })
+  const [isMinimized, setIsMinimized] = useState(false)
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
+  )
+  const [bootComplete, setBootComplete] = useState(() =>
+    typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('terminal.booted') === '1' : false
+  )
+  const dragRef = useRef<{ startX: number; startY: number; startPosX: number; startPosY: number } | null>(null)
+  const resizeRef = useRef<{ startX: number; startY: number; startW: number; startH: number; edge: string } | null>(null)
+
   const navigate = useNavigate()
   const location = useLocation()
   const inputRef = useRef<HTMLDivElement>(null)
   const historyRef = useRef<HTMLDivElement>(null)
-  const resizeStateRef = useRef<{ startY: number; startHeight: number } | null>(null)
-  const lastExpandedHeightRef = useRef<number>(DEFAULT_BODY_HEIGHT_PX)
-  const lastTapAtRef = useRef<number>(0)
-
-  const reservedHeightPx = useMemo(() => {
-    // Header + body height
-    return bodyHeightPx + TERMINAL_HEADER_HEIGHT_PX
-  }, [bodyHeightPx])
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -69,16 +66,117 @@ function Terminal() {
     }
   }, [history, streamingText])
 
+  // Mobile detection
   useEffect(() => {
-    if (bodyHeightPx > 0) {
-      lastExpandedHeightRef.current = bodyHeightPx
+    const onResize = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  // Drag + resize handlers
+  const onDragStart = (e: React.PointerEvent) => {
+    if (isMobile) return
+    e.preventDefault()
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startPosX: windowPos.x,
+      startPosY: windowPos.y,
     }
-  }, [bodyHeightPx])
+    document.body.style.userSelect = 'none'
+  }
 
   useEffect(() => {
-    localStorage.setItem('terminal.bodyHeightPx', String(bodyHeightPx))
-    document.documentElement.style.setProperty('--terminal-reserved-height', `${reservedHeightPx}px`)
-  }, [bodyHeightPx, reservedHeightPx])
+    const onPointerMove = (e: PointerEvent) => {
+      if (dragRef.current) {
+        const dx = e.clientX - dragRef.current.startX
+        const dy = e.clientY - dragRef.current.startY
+        setWindowPos({
+          x: Math.max(0, Math.min(window.innerWidth - 100, dragRef.current.startPosX + dx)),
+          y: Math.max(0, Math.min(window.innerHeight - 60, dragRef.current.startPosY + dy)),
+        })
+      }
+      if (resizeRef.current) {
+        const r = resizeRef.current
+        const dx = e.clientX - r.startX
+        const dy = e.clientY - r.startY
+        setWindowSize({
+          w: Math.max(MIN_WIDTH, r.startW + dx),
+          h: Math.max(MIN_HEIGHT, r.startH + dy),
+        })
+      }
+    }
+    const onPointerUp = () => {
+      dragRef.current = null
+      resizeRef.current = null
+      document.body.style.userSelect = ''
+    }
+    window.addEventListener('pointermove', onPointerMove)
+    window.addEventListener('pointerup', onPointerUp)
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerup', onPointerUp)
+    }
+  }, [])
+
+  // Boot sequence
+  useEffect(() => {
+    if (bootComplete) return
+
+    const bootLines: HistoryLine[] = [
+      { type: 'command', text: '$ whoami' },
+      { type: 'output', text: 'kevin babou -- software engineer @ chime' },
+      { type: 'output', text: 'building agentic AI workflows and transaction infrastructure' },
+      { type: 'command', text: '' },
+      { type: 'command', text: '$ cat interests.txt' },
+      { type: 'output', text: 'distributed systems | LLM infrastructure | platform engineering' },
+      { type: 'command', text: '' },
+      { type: 'command', text: '$ help' },
+      { type: 'hint', text: 'type "question <anything>" to ask about me' },
+    ]
+
+    let currentLine = 0
+    const timer = setInterval(() => {
+      if (currentLine < bootLines.length) {
+        setHistory(bootLines.slice(0, currentLine + 1))
+        currentLine++
+      } else {
+        clearInterval(timer)
+        setBootComplete(true)
+        sessionStorage.setItem('terminal.booted', '1')
+      }
+    }, 300)
+
+    return () => clearInterval(timer)
+  }, [bootComplete])
+
+  // Minimize / restore / resize
+  const handleMinimize = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsMinimized(true)
+  }
+
+  const handleRestore = () => {
+    setIsMinimized(false)
+    setTimeout(() => inputRef.current?.focus(), 0)
+  }
+
+  const focusInput = () => {
+    if (!isMinimized) inputRef.current?.focus()
+  }
+
+  const onResizeStart = (e: React.PointerEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    resizeRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startW: windowSize.w,
+      startH: windowSize.h,
+      edge: 'se',
+    }
+    document.body.style.userSelect = 'none'
+  }
 
   // Move cursor to end of contentEditable
   const moveCursorToEnd = () => {
@@ -96,16 +194,16 @@ function Terminal() {
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       if (commandHistory.length === 0) return
-      
+
       if (historyIndex === -1) {
         // Save current input before navigating
         savedInputRef.current = inputRef.current?.textContent || ''
       }
-      
-      const newIndex = historyIndex === -1 
-        ? commandHistory.length - 1 
+
+      const newIndex = historyIndex === -1
+        ? commandHistory.length - 1
         : Math.max(0, historyIndex - 1)
-      
+
       setHistoryIndex(newIndex)
       if (inputRef.current) {
         inputRef.current.textContent = commandHistory[newIndex]
@@ -113,13 +211,13 @@ function Terminal() {
       }
       return
     }
-    
+
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       if (historyIndex === -1) return
-      
+
       const newIndex = historyIndex + 1
-      
+
       if (newIndex >= commandHistory.length) {
         // Restore saved input
         setHistoryIndex(-1)
@@ -139,10 +237,10 @@ function Terminal() {
 
     if (e.key === 'Enter') {
       e.preventDefault()
-      
+
       // Prevent new commands while streaming or sending email
       if (isStreaming || emailFormStep === 'sending') return
-      
+
       const rawInput = (inputRef.current?.textContent || '').trim()
       const command = rawInput.toLowerCase()
 
@@ -256,7 +354,7 @@ function Terminal() {
           'clear': 'clear — Clear the terminal history',
           'home': 'home — Navigate to the home page (About)',
         }
-        
+
         if (helpTexts[cmd]) {
           newHistory.push({ type: 'hint', text: helpTexts[cmd] })
         } else {
@@ -424,7 +522,7 @@ function Terminal() {
           if (line.startsWith('data: ')) {
             const data = line.slice(6)
             if (data === '[DONE]') continue
-            
+
             try {
               const parsed = JSON.parse(data)
               if (parsed.content) {
@@ -457,9 +555,9 @@ function Terminal() {
         const newHistory = [...prev]
         for (let i = newHistory.length - 1; i >= 0; i--) {
           if (newHistory[i].text === 'Thinking...') {
-            newHistory[i] = { 
-              type: 'error', 
-              text: `Error: ${error instanceof Error ? error.message : 'Failed to get response'}` 
+            newHistory[i] = {
+              type: 'error',
+              text: `Error: ${error instanceof Error ? error.message : 'Failed to get response'}`
             }
             break
           }
@@ -501,9 +599,9 @@ function Terminal() {
         const newHistory = [...prev]
         for (let i = newHistory.length - 1; i >= 0; i--) {
           if (newHistory[i].text === 'Sending your message...') {
-            newHistory[i] = { 
-              type: 'output', 
-              text: `Message sent! Kevin will get back to you at ${formData.email}` 
+            newHistory[i] = {
+              type: 'output',
+              text: `Message sent! Kevin will get back to you at ${formData.email}`
             }
             break
           }
@@ -515,9 +613,9 @@ function Terminal() {
         const newHistory = [...prev]
         for (let i = newHistory.length - 1; i >= 0; i--) {
           if (newHistory[i].text === 'Sending your message...') {
-            newHistory[i] = { 
-              type: 'error', 
-              text: `Error: ${error instanceof Error ? error.message : 'Failed to send email'}` 
+            newHistory[i] = {
+              type: 'error',
+              text: `Error: ${error instanceof Error ? error.message : 'Failed to send email'}`
             }
             break
           }
@@ -529,127 +627,49 @@ function Terminal() {
     }
   }
 
-  const focusInput = () => {
-    if (bodyHeightPx === 0) {
-      // Expand on click when collapsed, so the terminal remains usable.
-      setBodyHeightPx(clampBodyHeight(lastExpandedHeightRef.current || DEFAULT_BODY_HEIGHT_PX))
-      // Focus happens after re-render; schedule for next tick.
-      setTimeout(() => inputRef.current?.focus(), 0)
-      return
-    }
-    inputRef.current?.focus()
+  if (isMinimized && !isMobile) {
+    return (
+      <button className="terminal-pill" onClick={handleRestore}>
+        <span className="terminal-pill-icon">&#9654;</span>
+        <span>terminal</span>
+      </button>
+    )
   }
-
-  const toggleCollapsed = () => {
-    if (bodyHeightPx === 0) {
-      setBodyHeightPx(clampBodyHeight(lastExpandedHeightRef.current || DEFAULT_BODY_HEIGHT_PX))
-      setTimeout(() => inputRef.current?.focus(), 0)
-      return
-    }
-    setBodyHeightPx(0)
-  }
-
-  const clampBodyHeight = (h: number) => {
-    const max = Math.max(0, Math.floor(window.innerHeight * 0.7))
-    const floored = Math.floor(h)
-    return Math.max(MIN_BODY_HEIGHT_PX, Math.min(max, floored))
-  }
-
-  const startResize = (clientY: number) => {
-    resizeStateRef.current = { startY: clientY, startHeight: bodyHeightPx }
-  }
-
-  const onResizeMove = (clientY: number) => {
-    const s = resizeStateRef.current
-    if (!s) return
-    // Dragging up increases height; dragging down decreases height.
-    const next = s.startHeight + (s.startY - clientY)
-    const clamped = clampBodyHeight(next)
-    setBodyHeightPx(clamped <= COLLAPSE_THRESHOLD_PX ? 0 : clamped)
-  }
-
-  const stopResize = () => {
-    resizeStateRef.current = null
-  }
-
-  useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => onResizeMove(e.clientY)
-    const onMouseUp = () => stopResize()
-    const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length < 1) return
-      onResizeMove(e.touches[0].clientY)
-    }
-    const onTouchEnd = () => stopResize()
-
-    window.addEventListener('mousemove', onMouseMove)
-    window.addEventListener('mouseup', onMouseUp)
-    window.addEventListener('touchmove', onTouchMove, { passive: true })
-    window.addEventListener('touchend', onTouchEnd)
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove)
-      window.removeEventListener('mouseup', onMouseUp)
-      window.removeEventListener('touchmove', onTouchMove)
-      window.removeEventListener('touchend', onTouchEnd)
-    }
-  }, [bodyHeightPx])
 
   return (
     <div
-      className={`terminal${bodyHeightPx === 0 ? ' terminal--collapsed' : ''}`}
+      className={`terminal ${isMobile ? 'terminal--mobile' : 'terminal--floating'}`}
       onClick={focusInput}
       style={
-        {
-          '--terminal-body-height': `${bodyHeightPx}px`,
-        } as React.CSSProperties
+        isMobile
+          ? undefined
+          : {
+              left: `${windowPos.x}px`,
+              top: `${windowPos.y}px`,
+              width: `${windowSize.w}px`,
+              height: `${windowSize.h}px`,
+            }
       }
     >
       <div
         className="terminal-header"
-        role="separator"
-        aria-orientation="horizontal"
-        aria-label="Terminal header (drag to resize)"
-        tabIndex={0}
-        onMouseDown={(e) => {
-          startResize(e.clientY)
-        }}
-        onDoubleClick={(e) => {
-          e.stopPropagation()
-          stopResize()
-          toggleCollapsed()
-        }}
-        onTouchStart={(e) => {
-          if (e.touches.length < 1) return
-          const now = Date.now()
-          const isDoubleTap = now - lastTapAtRef.current <= DOUBLE_TAP_WINDOW_MS
-          lastTapAtRef.current = now
-
-          if (isDoubleTap) {
-            e.stopPropagation()
-            stopResize()
-            toggleCollapsed()
-            return
-          }
-
-          startResize(e.touches[0].clientY)
-        }}
-        onKeyDown={(e) => {
-          // Keyboard affordance
-          if (e.key === 'ArrowUp') setBodyHeightPx((h) => clampBodyHeight(h + 20))
-          if (e.key === 'ArrowDown') setBodyHeightPx((h) => clampBodyHeight(h - 20))
-        }}
+        onPointerDown={onDragStart}
       >
-        <span className="terminal-title">terminal</span>
-        <span className="terminal-toggle">drag to resize • double-click to collapse</span>
+        <div className="terminal-dots">
+          <span className="terminal-dot terminal-dot--close" onClick={handleMinimize} />
+          <span className="terminal-dot terminal-dot--minimize" onClick={handleMinimize} />
+          <span className="terminal-dot terminal-dot--maximize" />
+        </div>
+        <span className="terminal-title">kevin@portfolio ~ %</span>
+        <span className="terminal-title-spacer" />
       </div>
       <div className="terminal-body">
         <div className="terminal-history" ref={historyRef}>
           {history.map((line, i) => {
-            const isStreaming_ = isStreaming && line.text === 'Thinking...' && i === history.length - 1
-            const content = isStreaming_ ? (streamingText || 'Thinking...') : line.text
+            const isStreamingLine = isStreaming && line.text === 'Thinking...' && i === history.length - 1
+            const content = isStreamingLine ? (streamingText || 'Thinking...') : line.text
 
-            // For hint lines, highlight the label (text before first colon)
-            if (line.type === 'hint' && !isStreaming_) {
+            if (line.type === 'hint' && !isStreamingLine) {
               const colonIndex = line.text.indexOf(':')
               if (colonIndex !== -1) {
                 const label = line.text.slice(0, colonIndex + 1)
@@ -685,6 +705,9 @@ function Terminal() {
           </div>
         </div>
       </div>
+      {!isMobile && (
+        <div className="terminal-resize-handle" onPointerDown={onResizeStart} />
+      )}
     </div>
   )
 }
