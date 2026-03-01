@@ -5,100 +5,148 @@ function Experience() {
         <header className="section-header">
           <h1 className="section-title">Experience</h1>
           <p className="section-description">
-            Backend engineer focused on transactions, reliability, and platform primitives at scale.
+            Backend & platform engineer. Building AI infrastructure and high-throughput transaction systems.
           </p>
         </header>
       </section>
 
-      {/* Timeline */}
       <div className="timeline">
+        {/* Chime -- AI App Experience */}
         <article className="timeline-item">
           <header className="timeline-header">
             <h3 className="timeline-company">Chime</h3>
-            <p className="timeline-role">Mid-Level Software Engineer</p>
-            <p className="timeline-date">January 2025 – Present</p>
+            <p className="timeline-role">Software Engineer, AI App Experience</p>
+            <p className="timeline-date">Mar 2025 – Present</p>
           </header>
-
           <div className="timeline-content">
             <ul>
-              <li>Key contributor on Transactions Platform Core, an over 10k QPS service serving all Chime users.</li>
               <li>
-                Building a normalization & hydration platform for 1B+ transaction records stored in Chime’s DynamoDB
-                transactions table.
+                Building agentic LLM workflows over Amazon Bedrock with Python LangChain SDK,
+                powering net-new capabilities for over 25 million Chime members.
               </li>
               <li>
-                Facilitating a key transaction processor migration, offboarding from a legacy 3rd-party processor to
-                Chime Core (in-house native processor).
+                Designed and implemented a Transaction Categorization pipeline (SNS, SQS, inter-service async)
+                handling over 350 purchases/sec (30M/day) to power agentic spending insights.
               </li>
               <li>
-                Working with abstractions over Amazon SNS/SQS, developing async pub/sub messaging that powers an
-                event-driven design enabling 100M+ events/day consumption.
+                Leading insights & aggregations product across the stack, contributing to 7+ repositories
+                from React Native to Snowflake ETL pipelines.
               </li>
               <li>
-                Focusing on business logic migration, including building a distributed idempotency service available to
-                Chime as a gem.
+                Setting company standards by defining agentic coding workflows & orchestration frameworks.
               </li>
-              <li>Implemented idempotent internal transaction publishing patterns across multiple services.</li>
               <li>
-                Facilitating a migration from CoreDB + legacy APIs to a centralized DynamoDB transactions table with
-                LSI/GSI based indexing access patterns.
+                Reporting to Director & CTO in flat org structure, handling urgent work with care and precision.
               </li>
             </ul>
-
             <div className="tag-list">
-              <span className="tag tag--reliability">Reliability</span>
-              <span className="tag">DynamoDB</span>
+              <span className="tag">LangChain</span>
+              <span className="tag">Bedrock</span>
+              <span className="tag">Python</span>
               <span className="tag">SNS/SQS</span>
-              <span className="tag">Event-driven</span>
-              <span className="tag">Idempotency</span>
-              <span className="tag">Transactions</span>
-              <span className="tag">High QPS</span>
+              <span className="tag">React Native</span>
+              <span className="tag">Snowflake</span>
             </div>
           </div>
         </article>
 
+        {/* Chime -- Transactions Intelligence Platform */}
         <article className="timeline-item">
           <header className="timeline-header">
-            <h3 className="timeline-company">Coinbase</h3>
-            <p className="timeline-role">Internship + 2x Promoted → L4 Software Engineer</p>
-            <p className="timeline-date">May 2021 – May 2024</p>
+            <h3 className="timeline-company">Chime</h3>
+            <p className="timeline-role">Software Engineer, Transactions Intelligence Platform</p>
+            <p className="timeline-date">Jan 2025 – Mar 2025</p>
           </header>
-
           <div className="timeline-content">
             <ul>
               <li>
-                Implemented a net-new 0→1 Golang service with REST/gRPC (with gateway sidecar) designed to scalably
-                handle high request rates (&gt;5k requests/min); still in use.
+                Designed and implemented a cross-service bills and recurring expense cache mechanism
+                backed by DynamoDB, reducing average latency on a core API by 68%.
               </li>
               <li>
-                Decomposed monolithic business logic by refactoring 2.5k+ complex LOC and led a tightly-coupled frontend
-                migration including dual-write + read migration coordination.
+                Built cross-service idempotency solution during critical infrastructure migration,
+                enabling idempotency guarantees for 5+ services during a 25 million account, 3+ month migration.
               </li>
               <li>
-                Built Temporal workflows to ensure reliable processing of high-volume (&gt;$100m) crypto transfers
-                across high TVL networks (Polygon, Avalanche, Base).
+                Independently drove and implemented a buffer mechanism that resulted in $350k annualized savings.
               </li>
               <li>
-                Designed permission logic for cloud IAM using SpiceDB and authored a 15+ page technical spec detailing
-                migration, API design, and AWS infrastructure (EC2, Docker, Kubernetes).
+                Acted as Sev2 incident commander including holding thoughtful and informative retros.
               </li>
-              <li>
-                Enhanced observability with Datadog and Bugsnag; improved CI/CD with Buildkite and Testify, achieving
-                &gt;99% unit test coverage.
-              </li>
-              <li>Acted as incident commander during critical outages ensuring swift resolution.</li>
             </ul>
-
             <div className="tag-list">
+              <span className="tag">Ruby</span>
+              <span className="tag">DynamoDB</span>
+              <span className="tag tag--reliability">Idempotency</span>
               <span className="tag tag--reliability">Reliability</span>
+            </div>
+          </div>
+        </article>
+
+        {/* Coinbase -- Developer Platform */}
+        <article className="timeline-item">
+          <header className="timeline-header">
+            <h3 className="timeline-company">Coinbase</h3>
+            <p className="timeline-role">Software Engineer, Developer Platform</p>
+            <p className="timeline-date">May 2022 – Apr 2024</p>
+          </header>
+          <div className="timeline-content">
+            <ul>
+              <li>
+                Implemented a 0-to-1 Golang service with REST/gRPC gateway sidecar and MongoDB,
+                powering the Coinbase developer portal (cdp.coinbase.com). TDD from day one.
+              </li>
+              <li>
+                Decomposed monolithic business logic, including sensitive resources (Ethereum nodes),
+                and led a tightly coupled frontend migration with dual-write + read migration phases.
+              </li>
+              <li>
+                Leveraged SpiceDB-based permission logic for cloud IAM and authored a 10+ page technical
+                spec detailing migration, API design, and infrastructure configurations.
+              </li>
+              <li>
+                Solved novel transient retry auth errors with a Redis locking mechanism for idempotency.
+              </li>
+            </ul>
+            <div className="tag-list">
               <span className="tag">Go</span>
               <span className="tag">gRPC</span>
-              <span className="tag">REST</span>
-              <span className="tag">Temporal</span>
+              <span className="tag">MongoDB</span>
               <span className="tag">SpiceDB</span>
-              <span className="tag">AWS</span>
+              <span className="tag">Redis</span>
               <span className="tag">Kubernetes</span>
+            </div>
+          </div>
+        </article>
+
+        {/* Coinbase -- Blockchain Interoperability */}
+        <article className="timeline-item">
+          <header className="timeline-header">
+            <h3 className="timeline-company">Coinbase</h3>
+            <p className="timeline-role">Software Engineer Intern → L4 Engineer, Blockchain Interoperability</p>
+            <p className="timeline-date">May 2021 – May 2022</p>
+          </header>
+          <div className="timeline-content">
+            <ul>
+              <li>
+                Built Temporal workflows to ensure reliable processing of high-volume ($100M+) crypto transfers
+                across high TVL networks like Polygon, Avalanche, and Base.
+              </li>
+              <li>
+                Enhanced system observability with Datadog and Bugsnag; improved CI/CD pipelines via Buildkite
+                and Testify, achieving over 99% unit test coverage.
+              </li>
+              <li>
+                Devised logic which increased Coinbase cross-chain liquidity offerings while programmatically
+                keeping hot reserves below threshold.
+              </li>
+            </ul>
+            <div className="tag-list">
+              <span className="tag">Go</span>
+              <span className="tag">Temporal</span>
               <span className="tag">Datadog</span>
+              <span className="tag">Buildkite</span>
+              <span className="tag">Blockchain</span>
             </div>
           </div>
         </article>
