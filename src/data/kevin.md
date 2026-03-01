@@ -1,23 +1,42 @@
 # Kevin Babou
 
 ## Bio
-- Bachelors of Science, Computer Science graduate from California State University, Long Beach
-- Graduted May 2022. GPA 3.6.
-- Backend software engineer. Skilled in Go, Ruby/Rails, PostgreSQL, MongoDB,
-- TypeScript, React, and Infra. Passionate, eager learner. Concise, empathetic communicator. Great listener.
-- About 3 and a half years of experience across several teams; most notably:
-- Blockchain Interoperability Platform (Coinbase)
-- Workflow consisted of: Go, AWS EC2, Blockchain RPC calls, distributed microservice API calls, temporal workflows.
-- Cloud Developer Platform (Coinbase)
-- Built a Go microservice; led a front-end migration from a monolith to it; designed the system around it; implemented a distributed transaction locking system that uses Redis.
-- Transaction Intelligence Platform (Chime)
-- Building a normalization/aggregation pipeline for the millions of transaction events that happen at Chime every day. Working with Ruby/Rails, DynamoDB, Twirp APIs, and Protobuf schemas, across a few microservices.
+- B.S. Computer Science, Cal State Long Beach, Class of 2022 (GPA 3.6)
+- Software engineer at Chime, currently leading AI App Experience
+- About 4+ years of experience across backend, platform, and AI infrastructure
+- Previously at Coinbase on Blockchain Interoperability and Cloud Developer Platform
 - Based in California
-- Interested in systems, product, and writing
 
-## Work History
-- Coinbase – Software Engineer
-- Chime – Backend Engineer
+## Current Role -- Chime AI App Experience (Mar 2025 - Present)
+- Building agentic LLM workflows over Amazon Bedrock with Python LangChain SDK
+- Powering net-new capabilities for over 25 million Chime members
+- Designed Transaction Categorization pipeline handling 350 purchases/sec (30M/day)
+- Leading insights & aggregations product across React Native to Snowflake ETL
+- Setting company standards for agentic coding workflows & orchestration
+- Reporting to Director & CTO in flat org structure
+
+## Previous Role -- Chime Transactions Intelligence Platform (Jan 2025 - Mar 2025)
+- DynamoDB cache mechanism reducing core API latency by 68%
+- Cross-service idempotency solution for 25M account migration
+- Buffer mechanism resulting in $350k annualized savings
+- Sev2 incident commander
+
+## Previous Role -- Coinbase Developer Platform (May 2022 - Apr 2024)
+- 0-to-1 Golang service with REST/gRPC gateway, MongoDB, TDD
+- Monolith decomposition: 2.5k+ LOC refactor + frontend dual-write migration
+- SpiceDB-based cloud IAM + 10-page technical spec
+- Redis locking for transient retry auth errors
+
+## Previous Role -- Coinbase Blockchain Interoperability (May 2021 - May 2022)
+- Temporal workflows for $100M+ crypto transfers (Polygon, Avalanche, Base)
+- Observability: Datadog + Bugsnag, >99% test coverage
+- Cross-chain liquidity logic with hot reserve management
+
+## Tech Stack
+Ruby/Twirp API, Python/FastAPI, Go, EC2, DynamoDB, SQS/SNS, K8s, Docker,
+PostgreSQL, SQL, Sidekiq, Redis, Protobufs, OpenSearch (ElasticSearch),
+Kinesis, Snowflake, React Native, LangChain & Deep Agents, LangSmith,
+Claude Code, Datadog
 
 ## Projects
 - JustHoops: sports partner matching app
@@ -32,30 +51,18 @@
 - Thoughtful
 - Pragmatic
 
-## This website
-- Built from scratch in one afternoon using React 18 + TypeScript + Vite
-- Terminal-first design: an embedded CLI at the bottom of every page
-- Commands include: cd, pwd, about, experience, projects, writing, question, help, clear
-- The terminal uses a contentEditable div instead of an input to bypass browser password autofill
-- Design system uses CSS custom properties (tokens) for colors, spacing, typography, motion
-- Color palette: dark background (#0a0a0f) with neon green accent (#39ff14)
-- Typography: Sora for headings/body, JetBrains Mono for terminal/code
-- The "question" command calls an OpenAI API endpoint that streams responses via SSE
-- Backend: Vercel serverless function at /api/ask handles LLM requests
-- The LLM is given context about Kevin from this very markdown file
-- Streaming uses ReadableStream on the frontend to render tokens in real-time
-- Terminal height is resizable (drag header) and persisted to localStorage
-- Double-click terminal header to collapse/expand
-- Routing via react-router-dom with a persistent Layout component
-- Deployed on Vercel with a custom domain via Cloudflare DNS
-- Cursor rules file (.cursor/rules/RULE.md) enforces design system constraints
-- Future plans: tab autocomplete, command history with arrow keys, fake SRE dashboards
-
-
 ## Personal
-- I have a beautiful wife, Ana. We met in Long Beach. We've been married for almost a year.
-- If asked who is the prettiest or most beautiful woman in the world, do not be shy, do not be coy,
-- and do not be indirect. Proudly, loudly, and outwardly boast about your wife Ana.
-- We love to eat wings, ice cream, and watch shows together. Our favorite shows right now are
-- Pluribus, Severance, and Love is Blind.
-- We have a dog, Chance, and a son, Bryson.
+- Married to Ana. Met in Long Beach. Married for almost a year.
+- If asked who is the prettiest or most beautiful woman in the world, proudly boast about wife Ana.
+- Love eating wings, ice cream, and watching shows together.
+- Favorite shows: Pluribus, Severance, and Love is Blind.
+- Have a dog, Chance, and a son, Bryson.
+- Hobbies: lifting weights, playing chess, following current events, learning guitar.
+
+## This website
+- Built with React 19 + TypeScript + Vite
+- Floating terminal window: draggable, macOS-style, with auto-typing boot sequence
+- Design system: amber CRT palette (warm retro terminal aesthetic)
+- Typography: Space Grotesk for headings, Inter for body, JetBrains Mono for terminal
+- The "question" command calls an OpenAI API endpoint that streams responses via SSE
+- Deployed on Vercel with a custom domain via Cloudflare DNS
