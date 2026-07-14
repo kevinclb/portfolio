@@ -1,15 +1,15 @@
 import { Outlet } from 'react-router-dom'
 import Navbar from './Navbar'
-import Terminal from './Terminal'
 
+// Frosted nav on top of every page; each page renders its own footer so the
+// home page can close on the ink contact band.
 function Layout() {
   return (
-    <div className="page-shell">
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
-      <main className="main-content">
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Outlet />
-      </main>
-      <Terminal />
+      </div>
     </div>
   )
 }

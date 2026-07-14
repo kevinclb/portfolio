@@ -9,52 +9,29 @@ export interface Project {
 export const projects: Project[] = [
   
   {
-    slug: 'terminal-portfolio',
-    title: 'This Website: Terminal-First Portfolio',
-    summary: 'A terminal-inspired portfolio with an embedded CLI, streaming LLM responses, and a design system built for recruiters. Shipped in one afternoon.',
-    tags: ['React', 'Vite', 'OpenAI', 'Vercel'],
-    content: `This website is the project. I built it from scratch in a single afternoon — a terminal-first portfolio that lets visitors navigate via CLI commands and ask questions answered by an LLM trained on my background. Here's the full technical breakdown.
+    slug: 'caret-portfolio',
+    title: 'This Website: Caret',
+    summary: 'The site you\'re on — rebuilt on Caret, a monochrome design system with one cobalt accent, unconventionally big headers, and a writing page wired straight to my Substack.',
+    tags: ['React', 'Vite', 'Design system', 'Vercel'],
+    content: `This website is the project. It's built on **Caret** — a small, opinionated design system I use for kevinbabou.dev: near-white paper, warm-free ink, and exactly one cobalt accent used as a signal, not decoration. The look borrows Apple's confidence and scale, Notion's calm reading surfaces, and a few Cursor/Vercel sprinkles — mono labels, hairline structure, ink-black bands, and a blinking caret that ends the display headlines.
 
 ## Stack Overview
 
-Frontend: React 18 + TypeScript, bundled with Vite. No component library — just a custom design system with CSS variables for tokens (colors, spacing, typography, motion). The terminal is a contentEditable div (not an input) to bypass browser password autofill detection. Routing via react-router-dom with a persistent Layout component that keeps the terminal drawer fixed at the bottom.
+Frontend: React 19 + TypeScript, bundled with Vite. No component library and no utility framework — just Caret's single stylesheet of design tokens (\`--color-*\`, \`--font-*\`, \`--space-*\`, \`--radius-*\`) and a thin component layer (\`.btn\`, \`.card\`, \`.post\`, \`.band\`, \`.prose\`). Every color, font size and radius on the page reads from those variables; nothing is hard-coded. Routing is react-router-dom with a persistent frosted nav.
 
-Backend: Vercel serverless functions. A single /api/ask endpoint handles the LLM integration. The function streams responses using the Fetch API's ReadableStream, sending Server-Sent Events (SSE) back to the client for real-time token rendering.
+Backend: Vercel serverless functions for the contact path. Deploys are wired to GitHub — every push to main triggers a build — with DNS on Cloudflare and SSL terminated by Vercel.
 
-## Terminal Architecture
+## The design language
 
-The terminal maintains a history array of typed lines with types: command, output, error, and hint (for styled help text). Commands are parsed in a single handleKeyDown handler — no formal lexer, just string matching and startsWith checks. Navigation commands call react-router's navigate(); the cd command accepts routes as arguments.
+One typeface does the talking: Instrument Sans for everything from body to the oversized \`.display-1\` (it clamps up to 124px at −0.042em), with Geist Mono carrying the engineering details — eyebrows, dates, tags, code. Structure comes from hairlines and whitespace, not shadows or gradients. The one dramatic move is the \`.band\`: a full-bleed ink-black section that re-themes every token inside it, used for the stats and the closing contact call.
 
-The input uses contentEditable instead of <input type="text"> because browsers aggressively offer password autofill on any text input. Switching to contentEditable required custom placeholder rendering via CSS :empty::before and manual textContent management, but eliminated the autofill popup entirely.
+## Writing, straight from Substack
 
-The terminal drawer is resizable via pointer events on the header. State is persisted to localStorage so the height survives page reloads. Double-click collapses; drag to resize. Keyboard users can use arrow keys when focused on the header.
+The writing page doesn't host essays — it teases my real Substack, *Thoughts and Schemes*, and links out. Post metadata lives in a single typed data file sourced from Substack's public posts API, so the featured essay, its opening hook, and the hairline-ruled rows all stay in sync with what I've actually published. Subscribing hands off to Substack's own flow, which owns the list and delivery.
 
-## LLM Integration
+## Why rebuild it this way
 
-The /api/ask endpoint accepts a POST with { question: string }, constructs a system prompt with my background context, and calls OpenAI's chat completions API with stream: true. The response is piped through a TransformStream that formats chunks as SSE:
-
-data: {"content":"token"}
-data: [DONE]
-
-On the frontend, handleQuestion reads the stream with a ReadableStream reader, accumulates tokens into state, and updates a streamingText value that replaces the "Thinking..." placeholder in real-time. Error handling gracefully degrades — if the stream fails, the "Thinking..." line is replaced with an error message.
-
-## Design System
-
-All styling uses CSS custom properties defined in index.css. Colors follow a dark-first palette with a neon green accent (#39ff14). Typography uses two fonts: Sora for headings/body, JetBrains Mono for terminal/code/tags. Spacing follows an 8px grid. Motion respects prefers-reduced-motion.
-
-The cursor rules file (.cursor/rules/RULE.md) encodes the design system constraints: no inline styles, no one-off values, component reuse, accessible focus states. This acts as a contract for AI-assisted development — any changes proposed by Cursor must follow these rules.
-
-## Deployment
-
-Vercel handles deployment. The repo is connected to Vercel via GitHub integration — every push to main triggers a build. The domain is registered on Cloudflare with DNS-only CNAME records pointing to cname.vercel-dns.com. Vercel handles SSL termination.
-
-Environment variables (OPENAI_API_KEY) are configured in Vercel's dashboard. The serverless function cold-starts in ~100ms; warm invocations are ~20ms before OpenAI latency.
-
-## Future Plans
-
-I want to add: (1) tab autocomplete for commands, (2) persistent command history with up/down arrow navigation, (3) a "metrics" command that shows fake SRE-style dashboards (p99 latency, error rates) to demonstrate observability thinking, (4) a "trace" command that renders a mock distributed trace, and (5) syntax highlighting for code blocks in LLM responses.
-
-The goal is to make this portfolio feel like a production system — polished, observable, and interactive — while showcasing the kind of tooling I actually enjoy building.`,
+The previous version of this site was a terminal-themed, dark, neon-accented experiment. Caret is the opposite bet: quiet, monochrome, and typographic, letting the work and the writing carry the page instead of the chrome. It's the kind of restraint I find harder — and more satisfying — to get right.`,
   },
   {
     slug: 'distributed-lock',
