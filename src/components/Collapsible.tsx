@@ -4,6 +4,8 @@ interface CollapsibleProps {
   /** Rendered inside the trigger button (the always-visible title row). */
   header: ReactNode
   children: ReactNode
+  /** Optional detail that peeks in on hover while closed, hinting it expands. */
+  preview?: ReactNode
   defaultOpen?: boolean
   /** 'sub' tightens the padding for nested subsections. */
   variant?: 'section' | 'sub'
@@ -12,7 +14,7 @@ interface CollapsibleProps {
 // An accessible disclosure: a button toggles a region that opens gently via a
 // grid-template-rows 0fr -> 1fr transition (no height measuring needed). The
 // animation collapses under prefers-reduced-motion (handled globally in CSS).
-function Collapsible({ header, children, defaultOpen = false, variant = 'section' }: CollapsibleProps) {
+function Collapsible({ header, children, preview, defaultOpen = false, variant = 'section' }: CollapsibleProps) {
   const [open, setOpen] = useState(defaultOpen)
   const regionId = useId()
 
@@ -41,6 +43,11 @@ function Collapsible({ header, children, defaultOpen = false, variant = 'section
           <path d="m9 18 6-6-6-6" />
         </svg>
       </button>
+      {preview && (
+        <div className="collapsible-preview" aria-hidden="true">
+          <div className="collapsible-preview-inner">{preview}</div>
+        </div>
+      )}
       <div className="collapsible-region" id={regionId} role="region">
         {/* inner is the animated grid item and must stay padding-free so it can
             collapse to 0; spacing lives on the nested content wrapper. */}

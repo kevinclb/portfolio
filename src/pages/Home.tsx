@@ -1,12 +1,11 @@
 import { Link } from 'react-router-dom'
 import Collapsible from '../components/Collapsible'
-import RobotHero from '../components/RobotHero'
 import { companies, stack, stats } from '../data/experience'
 import { posts, SUBSTACK } from '../data/substack'
 
-// The portfolio front page: a two column hero with the line-art robot,
-// collapsible work history, an ink stats band, the stack in mono chips, a
-// Substack writing preview, and a dark closing contact band.
+// The portfolio front page: an oversized hero, collapsible work history, an ink
+// impact band, the stack in mono chips, a Substack writing preview, and a dark
+// closing contact band.
 function Home() {
   const preview = posts.slice(0, 3)
 
@@ -14,38 +13,29 @@ function Home() {
     <div className="page-enter">
       {/* ── hero ─────────────────────────────────────────────── */}
       <header
-        className="container hero"
-        style={{ paddingTop: 'clamp(64px,10vw,120px)', paddingBottom: 'clamp(56px,9vw,104px)' }}
+        className="container"
+        style={{ paddingTop: 'clamp(72px,12vw,140px)', paddingBottom: 'clamp(64px,10vw,120px)' }}
       >
-        <div className="hero-copy">
-          <span className="eyebrow">
-            <span className="eyebrow-num">kevinbabou.dev</span> · software engineer, agents and infra
-          </span>
-          <h1 className="display-2" style={{ marginTop: 20 }}>
-            Building agents,<br />
-            designing high-scale distributed systems,<br />
-            and constantly learning.<span className="caret" />
-          </h1>
-          <p
-            className="text-muted"
-            style={{ fontSize: 19, lineHeight: 1.6, maxWidth: '48ch', margin: '8px 0 32px' }}
-          >
-            I'm a software engineer at Chime, where I build agentic pipelines for more than 25
-            million members and the infrastructure that keeps them honest. Before that I helped
-            move real money across chains at Coinbase. I like hard problems and I like getting
-            them right.
-          </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <a className="btn btn-primary btn-lg" href="/resume.pdf" target="_blank" rel="noopener">
-              View résumé
-            </a>
-            <Link className="btn btn-secondary btn-lg" to="/writing">
-              Read my writing
-            </Link>
-          </div>
-        </div>
-        <div className="hero-art" aria-hidden="true">
-          <RobotHero />
+        <span className="eyebrow">
+          <span className="eyebrow-num">kevinbabou.dev</span> · software engineer
+        </span>
+        <h1 className="display-1" style={{ marginTop: 20, maxWidth: '12ch' }}>
+          I build agents, and the systems they run on.<span className="caret" />
+        </h1>
+        <p
+          className="text-muted"
+          style={{ fontSize: 19, lineHeight: 1.6, maxWidth: '46ch', margin: '8px 0 32px' }}
+        >
+          Software engineer at Chime, building agentic pipelines for 25 million+ members and the
+          infrastructure that keeps them honest. Before that, Coinbase.
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <a className="btn btn-primary btn-lg" href="/resume.pdf" target="_blank" rel="noopener">
+            View résumé
+          </a>
+          <Link className="btn btn-secondary btn-lg" to="/writing">
+            Read my writing
+          </Link>
         </div>
       </header>
 
@@ -76,6 +66,7 @@ function Home() {
           {companies.map((c) => (
             <Collapsible
               key={c.name}
+              preview={<span className="work-peek">{c.role}</span>}
               header={
                 <span className="work-acc-title">
                   <span className="work-acc-name">{c.name}</span>
@@ -100,20 +91,18 @@ function Home() {
         </div>
       </section>
 
-      {/* ── stats band ───────────────────────────────────────── */}
+      {/* ── impact band ──────────────────────────────────────── */}
       <section className="band">
         <div
           className="container"
           style={{ paddingTop: 'clamp(56px,8vw,88px)', paddingBottom: 'clamp(56px,8vw,88px)' }}
         >
-          <span className="eyebrow">outcomes, not adjectives</span>
-          <div className="stat-grid">
+          <span className="eyebrow">some numbers I'm proud of</span>
+          <div className="impact-grid">
             {stats.map((s) => (
-              <div className="stat" key={s.label}>
-                <span className="stat-num" style={{ fontSize: 56 }}>
-                  {s.num}
-                </span>
-                <span className="stat-label">{s.label}</span>
+              <div className="impact-item" key={s.label}>
+                <span className="impact-num">{s.num}</span>
+                <span className="impact-label">{s.label}</span>
               </div>
             ))}
           </div>
@@ -130,7 +119,7 @@ function Home() {
         </span>
         <div className="chip-row">
           {stack.map((s) => (
-            <span className={`tag${s.startsWith('LangChain') ? ' tag-accent' : ''}`} key={s}>
+            <span className="tag stack-chip" key={s}>
               {s}
             </span>
           ))}
