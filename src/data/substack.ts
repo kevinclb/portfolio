@@ -22,6 +22,14 @@ export interface SubstackPost {
 
 export const posts: SubstackPost[] = [
   {
+    title: 'Hacking your AI workflow, part 1',
+    subtitle: "I don't know how many parts this is going to have.",
+    date: '2026-07-15',
+    url: 'https://kevinclb.substack.com/p/hacking-your-ai-workflow-part-1',
+    readingTime: '2 min',
+    hook: "I've been using something for a while now that's quietly changing how I work and plan. The problem it solves is simple: it's tiring, cumbersome, and slow to constantly type to prompt.",
+  },
+  {
     title: 'LLMs, Agents, and Psychosis',
     subtitle: "We shouldn't be this easily duped.",
     date: '2026-05-16',
