@@ -270,3 +270,76 @@ a.card:hover{border-color:color-mix(in srgb,var(--color-text) 24%,transparent);b
   .post{grid-template-columns:1fr;gap:6px}
   .post-arrow{display:none}
 }
+
+/* ── hero with robot ──────────────────────────────────────────────────── */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,5vw,64px);align-items:center}
+.hero-copy{min-width:0}
+.hero-art{display:flex;justify-content:center;align-items:center}
+.robot-hero{width:100%;max-width:400px;height:auto;color:var(--color-text)}
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr}
+  .hero-art{display:none}
+}
+
+/* Robot faces shade top/side for an isometric read; strokes are the ink. */
+.robot-ink{stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.robot-face-front{fill:var(--color-surface)}
+.robot-face-top{fill:var(--color-neutral-100)}
+.robot-face-side{fill:var(--color-neutral-200)}
+.robot-limb{fill:none}
+.robot-ink-fill{fill:currentColor;stroke:none}
+.robot-accent-fill{fill:var(--color-accent);stroke:none}
+.robot-shadow{fill:var(--color-text);opacity:.06}
+.robot-float{animation:robot-float 4.5s var(--ease) infinite}
+@keyframes robot-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* ── collapsible / disclosure ─────────────────────────────────────────── */
+.collapsible-trigger{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding:16px 0;background:none;border:0;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.collapsible-chevron{flex:none;color:color-mix(in srgb,var(--color-text) 38%,transparent);transition:transform var(--dur) var(--ease),color var(--dur) var(--ease)}
+.collapsible[data-open="true"]>.collapsible-trigger .collapsible-chevron{transform:rotate(90deg);color:var(--color-accent)}
+.collapsible-trigger:hover .collapsible-chevron{color:var(--color-text)}
+.collapsible-region{display:grid;grid-template-rows:0fr;transition:grid-template-rows 280ms var(--ease)}
+.collapsible[data-open="true"]>.collapsible-region{grid-template-rows:1fr}
+.collapsible-inner{overflow:hidden;min-height:0}
+.collapsible-content{padding-bottom:16px}
+
+/* Work accordion — companies, then subsection titles, all closed by default. */
+.work-acc{border-top:1px solid var(--color-divider)}
+.work-acc>.collapsible{border-bottom:1px solid var(--color-divider)}
+.work-acc-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.work-acc-name{font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:22px;letter-spacing:-0.018em}
+.work-acc-period{font-size:12.5px}
+.work-subs{border-top:1px solid var(--color-divider);margin-top:2px}
+.work-subs>.collapsible{border-bottom:1px solid var(--color-divider)}
+.work-subs>.collapsible:last-child{border-bottom:0}
+.work-subs .collapsible-trigger{padding:12px 0}
+.collapsible-sub .collapsible-header{font-family:var(--font-heading);font-weight:600;font-size:16px;letter-spacing:-0.01em}
+.collapsible-sub .collapsible-content{padding-bottom:14px}
+
+/* ── about page ───────────────────────────────────────────────────────── */
+.about-blocks{display:flex;flex-direction:column;max-width:var(--measure)}
+.about-block{padding:28px 0;border-top:1px solid var(--color-divider)}
+.about-block:first-child{border-top:0;padding-top:8px}
+.about-block .eyebrow{margin-bottom:12px}
+.about-block p{font-size:16.5px;line-height:1.72;color:color-mix(in srgb,var(--color-text) 80%,transparent)}
+.about-block p:last-child{margin-bottom:0}
+
+/* ── experience timeline ──────────────────────────────────────────────── */
+.xp-list{display:flex;flex-direction:column}
+.xp-item{display:grid;grid-template-columns:minmax(200px,260px) 1fr;gap:24px 56px;padding:36px 0;border-top:1px solid var(--color-divider)}
+.xp-item:first-child{border-top:0;padding-top:12px}
+@media (max-width:720px){.xp-item{grid-template-columns:1fr;gap:16px}}
+
+/* ── uses page ────────────────────────────────────────────────────────── */
+.uses-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px 48px;margin-top:8px}
+.uses-list{margin:0}
+.uses-row{display:grid;grid-template-columns:minmax(110px,auto) 1fr;gap:4px 16px;padding:9px 0;border-top:1px solid var(--color-divider);align-items:baseline}
+.uses-row:first-child{border-top:0}
+.uses-row dt{font-family:var(--font-mono);font-size:13px;color:var(--color-text)}
+.uses-row dd{margin:0;font-size:13.5px;line-height:1.5}
+@media (max-width:520px){.uses-row{grid-template-columns:1fr;gap:2px}}
+
+/* ── footer links ─────────────────────────────────────────────────────── */
+.footer-links{display:flex;gap:18px;flex-wrap:wrap}
+.footer-links a{font-size:13px;font-weight:500;color:color-mix(in srgb,var(--color-text) 58%,transparent);text-decoration:none;transition:color var(--dur) var(--ease)}
+.footer-links a:hover{color:var(--color-text)}

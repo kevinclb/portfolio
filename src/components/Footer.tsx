@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
-// The slim page footer used on interior pages. The home page uses its own
-// ink `.band` contact footer instead.
+// The slim interior-page footer. The home page uses its own ink `.band` contact
+// footer instead.
 function Footer() {
   return (
     <footer style={{ borderTop: '1px solid var(--color-divider)' }}>
@@ -20,12 +20,16 @@ function Footer() {
         <span className="mono text-subtle" style={{ fontSize: 12 }}>
           © 2026 Kevin Babou
         </span>
-        <Link
-          to="/"
-          style={{ fontSize: 13, fontWeight: 500, color: 'inherit', textDecoration: 'none' }}
-        >
-          Home
-        </Link>
+        <nav className="footer-links">
+          <Link to="/about">About</Link>
+          <Link to="/uses">Uses</Link>
+          <a href="https://github.com/kevinclb" target="_blank" rel="noopener">
+            GitHub
+          </a>
+          <a href="https://kevinclb.substack.com" target="_blank" rel="noopener">
+            Substack
+          </a>
+        </nav>
       </div>
     </footer>
   )

@@ -13,13 +13,13 @@ const fmt = (iso: string) =>
   })
 
 // The Substack-backed writing index. It teases the real "Thoughts and Schemes"
-// posts — a featured essay with its opening hook, then hairline-ruled rows —
-// and links every one out to Substack, where the full essays and RSS live.
+// posts (a featured essay with its opening hook, then hairline-ruled rows) and
+// links every one out to Substack, where the full essays and RSS live.
 function Writing() {
   const [email, setEmail] = useState('')
   const [featured, ...rest] = posts
 
-  // Hand off to Substack's own subscribe flow — it owns the list and delivery.
+  // Hand off to Substack's own subscribe flow. It owns the list and delivery.
   const subscribe = (e: React.FormEvent) => {
     e.preventDefault()
     const url = email
@@ -36,7 +36,7 @@ function Writing() {
         style={{ width: '100%', paddingTop: 'clamp(64px,10vw,120px)', paddingBottom: 'clamp(40px,6vw,64px)' }}
       >
         <span className="eyebrow">
-          <span className="eyebrow-num">writing</span> — {SUBSTACK.name}, delivered by Substack
+          <span className="eyebrow-num">writing</span> · {SUBSTACK.name}, delivered by Substack
         </span>
         <h1 className="display-1" style={{ marginTop: 20, maxWidth: '11ch' }}>
           Thoughts and schemes.<span className="caret" />
@@ -45,8 +45,8 @@ function Writing() {
           className="text-muted"
           style={{ fontSize: 19, lineHeight: 1.6, maxWidth: '52ch', margin: '8px 0 0' }}
         >
-          {SUBSTACK.tagline} Essays on agents, infrastructure, and learning in public —
-          written slowly, published on Substack.
+          {SUBSTACK.tagline} Essays on agents, infrastructure, and learning in public,
+          written slowly and published on Substack.
         </p>
         <form className="subscribe" style={{ marginTop: 32 }} onSubmit={subscribe}>
           <input
@@ -62,7 +62,7 @@ function Writing() {
           </button>
         </form>
         <p className="subscribe-note">
-          One email per essay. Delivered by Substack — unsubscribe anytime.
+          One email per essay. Delivered by Substack, unsubscribe anytime.
         </p>
       </header>
 

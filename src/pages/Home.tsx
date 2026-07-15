@@ -1,11 +1,12 @@
-import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import Collapsible from '../components/Collapsible'
+import RobotHero from '../components/RobotHero'
 import { companies, stack, stats } from '../data/experience'
 import { posts, SUBSTACK } from '../data/substack'
 
-// The portfolio front page: oversized hero with the caret, hairline-ruled work
-// history, an ink stats band, the stack in mono chips, a Substack writing
-// preview, and a dark closing contact band. Built entirely on Caret classes.
+// The portfolio front page: a two column hero with the line-art robot,
+// collapsible work history, an ink stats band, the stack in mono chips, a
+// Substack writing preview, and a dark closing contact band.
 function Home() {
   const preview = posts.slice(0, 3)
 
@@ -13,64 +14,88 @@ function Home() {
     <div className="page-enter">
       {/* ── hero ─────────────────────────────────────────────── */}
       <header
-        className="container"
-        style={{ paddingTop: 'clamp(72px,12vw,140px)', paddingBottom: 'clamp(64px,10vw,120px)' }}
+        className="container hero"
+        style={{ paddingTop: 'clamp(64px,10vw,120px)', paddingBottom: 'clamp(56px,9vw,104px)' }}
       >
-        <span className="eyebrow">
-          <span className="eyebrow-num">kevinbabou.dev</span> — software engineer, agents &amp; infra
-        </span>
-        <h1 className="display-1" style={{ marginTop: 20, maxWidth: '11ch' }}>
-          I build agents that do real work.<span className="caret" />
-        </h1>
-        <p
-          className="text-muted"
-          style={{ fontSize: 19, lineHeight: 1.6, maxWidth: '52ch', margin: '8px 0 32px' }}
-        >
-          Agentic pipelines and the infrastructure that keeps them honest — at Chime, for
-          25&nbsp;million+ members. Previously moving real money across chains at Coinbase.
-        </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <a className="btn btn-primary btn-lg" href="/resume.pdf" target="_blank" rel="noopener">
-            View résumé
-          </a>
-          <Link className="btn btn-secondary btn-lg" to="/writing">
-            Read my writing
-          </Link>
+        <div className="hero-copy">
+          <span className="eyebrow">
+            <span className="eyebrow-num">kevinbabou.dev</span> · software engineer, agents and infra
+          </span>
+          <h1 className="display-2" style={{ marginTop: 20 }}>
+            Building agents,<br />
+            designing high-scale distributed systems,<br />
+            and constantly learning.<span className="caret" />
+          </h1>
+          <p
+            className="text-muted"
+            style={{ fontSize: 19, lineHeight: 1.6, maxWidth: '48ch', margin: '8px 0 32px' }}
+          >
+            I'm a software engineer at Chime, where I build agentic pipelines for more than 25
+            million members and the infrastructure that keeps them honest. Before that I helped
+            move real money across chains at Coinbase. I like hard problems and I like getting
+            them right.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <a className="btn btn-primary btn-lg" href="/resume.pdf" target="_blank" rel="noopener">
+              View résumé
+            </a>
+            <Link className="btn btn-secondary btn-lg" to="/writing">
+              Read my writing
+            </Link>
+          </div>
+        </div>
+        <div className="hero-art" aria-hidden="true">
+          <RobotHero />
         </div>
       </header>
 
       {/* ── work ─────────────────────────────────────────────── */}
-      <section
-        id="work"
-        className="container"
-        style={{ paddingBottom: 'clamp(56px,8vw,96px)', scrollMarginTop: 84 }}
-      >
+      <section className="container" style={{ paddingBottom: 'clamp(56px,8vw,96px)' }}>
         <hr className="hr" style={{ margin: '0 0 40px' }} />
-        <span className="eyebrow">
-          <span className="eyebrow-num">01</span> — work
-        </span>
-        <div className="work-grid">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            gap: 16,
+            flexWrap: 'wrap',
+          }}
+        >
+          <span className="eyebrow">
+            <span className="eyebrow-num">01</span> / work
+          </span>
+          <Link
+            to="/experience"
+            style={{ fontSize: 14, fontWeight: 500, color: 'inherit', textDecoration: 'none' }}
+          >
+            Full timeline
+          </Link>
+        </div>
+
+        <div className="work-acc" style={{ marginTop: 28 }}>
           {companies.map((c) => (
-            <Fragment key={c.name}>
-              <div className="work-company">
-                <h3 style={{ marginBottom: 4 }}>{c.name}</h3>
-                <p className="mono text-subtle" style={{ fontSize: 12.5, marginBottom: 10 }}>
-                  {c.period}
-                </p>
-                <p className="text-muted" style={{ fontSize: 14.5, maxWidth: '24ch' }}>
-                  {c.role}
-                </p>
-              </div>
-              <div className="work-highlights" style={{ display: 'flex', flexDirection: 'column' }}>
+            <Collapsible
+              key={c.name}
+              header={
+                <span className="work-acc-title">
+                  <span className="work-acc-name">{c.name}</span>
+                  <span className="mono text-subtle work-acc-period">{c.period}</span>
+                </span>
+              }
+            >
+              <p className="text-muted" style={{ fontSize: 14.5, margin: '0 0 12px' }}>
+                {c.role}
+              </p>
+              <div className="work-subs">
                 {c.highlights.map((h) => (
-                  <div className="work-role" key={h.lead}>
-                    <p>
-                      <strong>{h.lead}</strong> — {h.body}
+                  <Collapsible key={h.lead} variant="sub" header={<span>{h.lead}</span>}>
+                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6 }} className="text-muted">
+                      {h.body}
                     </p>
-                  </div>
+                  </Collapsible>
                 ))}
               </div>
-            </Fragment>
+            </Collapsible>
           ))}
         </div>
       </section>
@@ -101,7 +126,7 @@ function Home() {
         style={{ paddingTop: 'clamp(56px,8vw,96px)', paddingBottom: 'clamp(48px,7vw,80px)' }}
       >
         <span className="eyebrow">
-          <span className="eyebrow-num">02</span> — stack
+          <span className="eyebrow-num">02</span> / stack
         </span>
         <div className="chip-row">
           {stack.map((s) => (
@@ -125,7 +150,7 @@ function Home() {
           }}
         >
           <span className="eyebrow">
-            <span className="eyebrow-num">03</span> — writing
+            <span className="eyebrow-num">03</span> / writing
           </span>
           <Link
             className="link-ext"
@@ -183,13 +208,14 @@ function Home() {
           style={{ paddingTop: 'clamp(72px,11vw,128px)', paddingBottom: 32 }}
         >
           <span className="eyebrow">
-            <span className="eyebrow-num">04</span> — contact
+            <span className="eyebrow-num">04</span> / contact
           </span>
           <h2 className="display-2" style={{ marginTop: 16 }}>
             Say hello.
           </h2>
           <p className="text-muted" style={{ fontSize: 17, maxWidth: '44ch', marginBottom: 32 }}>
-            Open to interesting problems, good coffee, and arguments about eval frameworks.
+            I'm always happy to talk about agents, infrastructure, or a good problem worth solving.
+            Reach out any time.
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <a className="btn btn-primary btn-lg" href="mailto:kevincbabou@gmail.com">
@@ -222,9 +248,9 @@ function Home() {
             <span className="mono text-subtle" style={{ fontSize: 12 }}>
               © 2026 Kevin Babou
             </span>
-            <span className="mono text-subtle" style={{ fontSize: 12 }}>
-              set in Instrument Sans &amp; Geist Mono
-            </span>
+            <Link className="mono text-subtle" to="/uses" style={{ fontSize: 12, textDecoration: 'none' }}>
+              what I use
+            </Link>
           </div>
         </div>
       </footer>
