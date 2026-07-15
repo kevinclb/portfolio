@@ -14,6 +14,8 @@ export const uses: UseGroup[] = [
     items: [
       { name: 'Cursor', note: 'my primary editor, with a house rules file that keeps the design honest' },
       { name: 'Claude Code', note: 'agentic coding for the heavier lifts' },
+      { name: 'Ghostty', note: 'my terminal' },
+      { name: 'Fluid Voice', note: 'dictation I picked up recently to drive my workflows by voice' },
       { name: 'macOS', note: 'daily driver' },
       { name: 'git', note: 'small, revertable commits' },
     ],
@@ -36,6 +38,7 @@ export const uses: UseGroup[] = [
       { name: 'Amazon Bedrock' },
       { name: 'LangSmith', note: 'traces and evals' },
       { name: 'Anthropic models' },
+      { name: 'Kokoro', note: 'text to speech, so my agents can talk back to me' },
     ],
   },
   {
