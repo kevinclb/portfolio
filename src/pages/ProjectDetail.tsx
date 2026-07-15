@@ -15,13 +15,13 @@ function ProjectDetail() {
         style={{ paddingTop: 'clamp(72px,12vw,140px)', paddingBottom: 96, textAlign: 'left' }}
       >
         <span className="eyebrow">
-          <span className="eyebrow-num">404</span> — not found
+          <span className="eyebrow-num">404</span> · not found
         </span>
         <h1 className="display-2" style={{ marginTop: 16 }}>
           No such project.
         </h1>
         <p className="text-muted" style={{ fontSize: 17, maxWidth: '40ch', marginBottom: 24 }}>
-          The project you're looking for doesn't exist — it may have moved.
+          The project you're looking for doesn't exist. It may have moved.
         </p>
         <Link className="btn btn-secondary" to="/projects">
           ← All projects
